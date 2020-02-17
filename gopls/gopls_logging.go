@@ -3,6 +3,8 @@ package gopls
 import (
 	"context"
 	"fmt"
+	"log"
+	"os"
 
 	"github.com/kr/pretty"
 	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/protocol"
@@ -127,9 +129,11 @@ func (l loggingGoplsServer) DidClose(ctxt context.Context, params *protocol.DidC
 }
 
 func (l loggingGoplsServer) Completion(ctxt context.Context, params *protocol.CompletionParams) (*protocol.CompletionList, error) {
+	fmt.Println("???????????")
 	fmt.Printf("gopls.Completion() call; params:\n%v", pretty.Sprint(params))
 	res, err := l.u.Completion(ctxt, params)
-	fmt.Printf("gopls.Completion() return; err: %v; res:\n%v", err, pretty.Sprint(res))
+	fmt.Fprintln(os.Stderr, "hello")
+	log.Fatalf("gopls.Completion() return; err: %v; res:\n%v", err, pretty.Sprint(res))
 	return res, err
 }
 
