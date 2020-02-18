@@ -16,7 +16,7 @@ import (
 )
 
 func main() {
-	s, err := os.
+s, err := os.
 
 }`
 	errChan := make(chan error, 1)
@@ -29,13 +29,12 @@ func main() {
 		Line: 8,
 		Col:  18,
 	}
-	resp, err := c.Complete()
+	err := c.FormatCurrentBuffer(nil)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	msg := <-errChan
 	fmt.Println(msg)
-	fmt.Println(resp)
 
 }

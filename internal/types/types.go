@@ -1,7 +1,9 @@
 package types
 
 import (
+	"encoding/json"
 	"fmt"
+	"log"
 	"math"
 
 	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/protocol"
@@ -47,7 +49,8 @@ type Buffer struct {
 	Name     string
 	Contents []byte
 	// cc is lazily set whenever position information is required
-	cc *span.TokenConverter
+	cc      *span.TokenConverter
+	Version int
 }
 
 func (b *Buffer) tokenConvertor() *span.TokenConverter {
@@ -55,6 +58,20 @@ func (b *Buffer) tokenConvertor() *span.TokenConverter {
 		b.cc = span.NewContentConverter(b.Name, b.Contents)
 	}
 	return b.cc
+}
+
+// URI returns the b's Name as a span.URI, assuming it is a file.
+// TODO we should panic here is this is not a file-based buffer
+func (b *Buffer) URI() span.URI {
+	return span.FileURI(b.Name)
+}
+
+// ToTextDocumentIdentifier converts b to a protocol.TextDocumentIdentifier
+func (b *Buffer) ToTextDocumentIdentifier() protocol.TextDocumentIdentifier {
+	return protocol.TextDocumentIdentifier{
+		//Name instead of URI
+		URI: string(b.Name),
+	}
 }
 
 // PointFromPosition converts protocol psoition to point position (?!)
@@ -79,4 +96,11 @@ func PointFromPosition(b *Buffer, pos protocol.Position) (Point, error) {
 
 func f2int(f float64) int {
 	return int(math.Round(f))
+}
+
+// Parse parses raw json to struct
+func Parse(j json.RawMessage, i interface{}) {
+	if err := json.Unmarshal(j, i); err != nil {
+		log.Fatalf("failed to parse from %q: %v", j, err)
+	}
 }
