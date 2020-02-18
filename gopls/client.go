@@ -93,11 +93,11 @@ func NewGoPlsClient(errChan chan error) *Client {
 		return conn.Run(ctxt)
 	})
 
-	// s := loggingGoplsServer{
-	// 	u: server,
-	// }
+	s := loggingGoplsServer{
+		u: server,
+	}
 
-	goplsClient.Server = server
+	goplsClient.Server = s
 	params := &protocol.ParamInitialize{}
 	// params.RootURI = string(span.FileURI(c.Client.app.wd))
 	params.RootURI = string(span.FileURI("nm-empty-wd"))
@@ -117,6 +117,8 @@ func NewGoPlsClient(errChan chan error) *Client {
 
 	return goplsClient
 }
+
+// DefaultOptions comes from the gopls default, this might be too much for our case.
 func DefaultOptions() source.Options {
 	return source.Options{
 		ClientOptions: source.ClientOptions{
