@@ -20,11 +20,11 @@ import (
 
 // Client ..
 type Client struct {
-	Server      protocol.Server
+	Buffer      *types.Buffer
 	Point       *types.Point
-	B           *types.Buffer
-	tomb        tomb.Tomb
+	Server      protocol.Server
 	goplsCancel context.CancelFunc
+	tomb        tomb.Tomb
 }
 
 var _ protocol.Client = &clienthandler{}
@@ -48,6 +48,7 @@ func NewGoPlsClient(errChan chan error) *Client {
 	if err != nil {
 		log.Fatalf("failed to create stderr pipe for gopls: %v", err)
 	}
+
 	goplsClient.tomb.Go(func() error {
 		scanner := bufio.NewScanner(stderr)
 		for scanner.Scan() {
@@ -100,7 +101,7 @@ func NewGoPlsClient(errChan chan error) *Client {
 	goplsClient.Server = s
 	params := &protocol.ParamInitialize{}
 	// params.RootURI = string(span.FileURI(c.Client.app.wd))
-	params.RootURI = string(span.FileURI("nm-empty-wd"))
+	params.RootURI = string(span.FileURI("tmp-wd"))
 	params.Capabilities.Workspace.Configuration = true
 	opts := source.DefaultOptions()
 	params.Capabilities.TextDocument.Hover = protocol.HoverClientCapabilities{

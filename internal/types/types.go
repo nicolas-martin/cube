@@ -47,6 +47,7 @@ func (p Point) GoplsChar() float64 {
 // Buffer represents the current state of the page
 type Buffer struct {
 	Name     string
+	Num      int
 	Contents []byte
 	// cc is lazily set whenever position information is required
 	cc      *span.TokenConverter

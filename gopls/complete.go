@@ -15,7 +15,7 @@ func (c *Client) Complete(args ...json.RawMessage) (interface{}, error) {
 		TextDocumentPositionParams: protocol.TextDocumentPositionParams{
 			TextDocument: protocol.TextDocumentIdentifier{
 				// NOTE: assume 1 file only
-				URI: c.B.Name,
+				URI: c.Buffer.Name,
 			},
 			Position: c.Point.ToPosition(),
 		},
@@ -27,7 +27,7 @@ func (c *Client) Complete(args ...json.RawMessage) (interface{}, error) {
 
 	start := c.Point.Col
 	if len(res.Items) > 0 {
-		pos, err := types.PointFromPosition(c.B, res.Items[0].TextEdit.Range.Start)
+		pos, err := types.PointFromPosition(c.Buffer, res.Items[0].TextEdit.Range.Start)
 		if err != nil {
 			return nil, fmt.Errorf("failed to derive completion start: %v", err)
 		}

@@ -3,13 +3,30 @@ package gopls
 import (
 	"context"
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/kr/pretty"
 	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/protocol"
+	"github.com/nicolas-martin/govim/cmd/govim/config"
+)
+
+const (
+	goplsConfigNoDocsOnHover  = "noDocsOnHover"
+	goplsConfigHoverKind      = "hoverKind"
+	goplsDeepCompletion       = "deepCompletion"
+	goplsCompletionMatcher    = "matcher"
+	goplsStaticcheck          = "staticcheck"
+	goplsCompleteUnimported   = "completeUnimported"
+	goplsGoImportsLocalPrefix = "local"
+	goplsCompletionBudget     = "completionBudget"
+	goplsTempModfile          = "tempModfile"
+	goplsVerboseOutput        = "verboseOutput"
+	goplsEnv                  = "env"
 )
 
 type clienthandler struct {
+	config config.Config
 }
 
 var _ protocol.Client = (*clienthandler)(nil)
@@ -78,18 +95,45 @@ func (ch *clienthandler) WorkspaceFolders(context.Context) ([]protocol.Workspace
 func (ch *clienthandler) Configuration(ctxt context.Context, params *protocol.ParamConfiguration) ([]interface{}, error) {
 	defer absorbShutdownErr()
 
-	// TODO this is a rather fragile workaround for https://github.com/golang/go/issues/35817
-	// It's fragile because we are relying on gopls not handling any requests until the response
-	// to Configuration is received and processed. In practice this appears to currently be
-	// the case but there is no guarantee of this going forward. Rather we hope that a fix
-	// for https://github.com/golang/go/issues/35817 lands sooner rather than later at whic
-	// point this workaround can go.
-	//
-	// We also use a lock here because, despite it appearing that will only be a single
-	// Configuration call and that if there were more they would be serial, we can't rely on
-	// this.
-	defer absorbShutdownErr()
-	panic("not implemented yet")
+	ch.logGoplsClientf("Configuration: %v", pretty.Sprint(params))
+
+	conf := ch.config
+
+	// gopls now sends params.Items for each of the configured
+	// workspaces. For now, we assume that the first item will be
+	// for the section "gopls" and only configure that. We will
+	// configure further workspaces when we add support for them.
+	if len(params.Items) == 0 || params.Items[0].Section != "gopls" {
+		return nil, fmt.Errorf("govim gopls client: expected at least one item, with the first section \"gopls\"")
+	}
+	res := make([]interface{}, len(params.Items))
+	goplsConfig := make(map[string]interface{})
+	goplsConfig[goplsConfigHoverKind] = "FullDocumentation"
+	if conf.CompletionDeepCompletions != nil {
+		goplsConfig[goplsDeepCompletion] = *conf.CompletionDeepCompletions
+	}
+	if conf.CompletionMatcher != nil {
+		goplsConfig[goplsCompletionMatcher] = *conf.CompletionMatcher
+	}
+	if conf.Staticcheck != nil {
+		goplsConfig[goplsStaticcheck] = *conf.Staticcheck
+	}
+	if conf.CompleteUnimported != nil {
+		goplsConfig[goplsCompleteUnimported] = *conf.CompleteUnimported
+	}
+	if conf.GoImportsLocalPrefix != nil {
+		goplsConfig[goplsGoImportsLocalPrefix] = *conf.GoImportsLocalPrefix
+	}
+	if conf.CompletionBudget != nil {
+		goplsConfig[goplsCompletionBudget] = *conf.CompletionBudget
+	}
+	if os.Getenv(string(config.EnvVarGoplsVerbose)) == "true" {
+		goplsConfig[goplsVerboseOutput] = true
+	}
+	res[0] = goplsConfig
+
+	ch.logGoplsClientf("Configuration response: %v", pretty.Sprint(res))
+	return res, nil
 }
 
 func (ch *clienthandler) ApplyEdit(context.Context, *protocol.ApplyWorkspaceEditParams) (*protocol.ApplyWorkspaceEditResponse, error) {
