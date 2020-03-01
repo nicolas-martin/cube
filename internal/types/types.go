@@ -54,6 +54,12 @@ type Buffer struct {
 	Version int
 }
 
+// SetContents updates a Buffer's contents to byts
+func (b *Buffer) SetContents(byts []byte) {
+	b.Contents = byts
+	b.cc = nil
+}
+
 func (b *Buffer) tokenConvertor() *span.TokenConverter {
 	if b.cc == nil {
 		b.cc = span.NewContentConverter(b.Name, b.Contents)

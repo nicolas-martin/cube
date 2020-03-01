@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/kr/pretty"
 	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/protocol"
 	"github.com/nicolas-martin/cube/internal/types"
 )
@@ -104,9 +103,12 @@ func (c *Client) applyEasyProtocolTextEdits(edits []protocol.TextEdit) error {
 		case "deletebufline":
 			fmt.Printf("%s = %v %v \r\n", e.call, e.start, e.end)
 		case "appendbufline":
+			//TODO: iterate / append range for e.lines
+			// Create a new line
 			blines = append(blines, nil)
+			// Shift everything
 			copy(blines[e.start+1:], blines[e.start:])
-			//TODO: Interate / append range for e.lines
+			// Insert
 			blines[e.start] = []byte(e.lines[0])
 			fmt.Printf("%s = %v %v \r\n", e.call, e.start, e.lines)
 		default:
@@ -119,8 +121,7 @@ func (c *Client) applyEasyProtocolTextEdits(edits []protocol.TextEdit) error {
 		newContents += fmt.Sprintf("%s\r\n", v)
 	}
 
-	fmt.Println(pretty.Sprint(newContents))
-	c.Buffer.Contents = []byte(newContents)
+	c.Buffer.SetContents([]byte(newContents))
 	c.Buffer.Version++
 	params := &protocol.DidChangeTextDocumentParams{
 		TextDocument: protocol.VersionedTextDocumentIdentifier{

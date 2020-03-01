@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 
+	"github.com/kr/pretty"
 	"github.com/nicolas-martin/cube/gopls"
 	"github.com/nicolas-martin/cube/internal/types"
 )
@@ -25,13 +26,13 @@ func main() {
 		Line: 7,
 		Col:  13,
 	}
-	fmt.Println("#############")
+
 	err = c.FormatCurrentBuffer()
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	fmt.Println("**************")
-	// fmt.Printf("r = %+v\n", r)
-
+	fmt.Println(pretty.Print(string(c.Buffer.Contents)))
 	msg := <-errChan
 	fmt.Println(msg)
-
 }
