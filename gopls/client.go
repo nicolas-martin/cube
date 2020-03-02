@@ -100,6 +100,8 @@ func NewGoPlsClient(errChan chan error) *Client {
 
 	goplsClient.Server = s
 	params := &protocol.ParamInitialize{}
+
+	//TODO: probably shouldn't hardcode this..
 	// params.RootURI = string(span.FileURI(c.Client.app.wd))
 	params.RootURI = string(span.FileURI("tmp-wd"))
 	params.Capabilities.Workspace.Configuration = true

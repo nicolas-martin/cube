@@ -32,7 +32,9 @@ func main() {
 		log.Fatal(err)
 	}
 
+	fmt.Println("\r\n= RESULT =")
 	fmt.Println(pretty.Print(string(c.Buffer.Contents)))
+	fmt.Println("= END RESULT =")
 	msg := <-errChan
 	fmt.Println(msg)
 }
