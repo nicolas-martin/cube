@@ -14,11 +14,11 @@ import (
 	"go/scanner"
 	"go/token"
 
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/imports"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/diff"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/protocol"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/span"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry/trace"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/imports"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/diff"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/protocol"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/span"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry/trace"
 	errors "golang.org/x/xerrors"
 )
 

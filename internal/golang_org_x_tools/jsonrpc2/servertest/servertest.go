@@ -13,7 +13,7 @@ import (
 	"net"
 	"sync"
 
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/jsonrpc2"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/jsonrpc2"
 )
 
 // Connector is the interface used to connect to a server.

@@ -14,10 +14,10 @@ import (
 	"golang.org/x/mod/modfile"
 	"golang.org/x/tools/go/analysis"
 	"golang.org/x/tools/go/packages"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/imports"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/protocol"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/packagesinternal"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/span"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/imports"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/protocol"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/packagesinternal"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/span"
 )
 
 // Snapshot represents the current state for the given view.

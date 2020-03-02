@@ -70,14 +70,13 @@ func (b *Buffer) tokenConvertor() *span.TokenConverter {
 // URI returns the b's Name as a span.URI, assuming it is a file.
 // TODO we should panic here is this is not a file-based buffer
 func (b *Buffer) URI() span.URI {
-	return span.FileURI(b.Name)
+	return span.URIFromPath(b.Name)
 }
 
 // ToTextDocumentIdentifier converts b to a protocol.TextDocumentIdentifier
 func (b *Buffer) ToTextDocumentIdentifier() protocol.TextDocumentIdentifier {
 	return protocol.TextDocumentIdentifier{
-		//Name instead of URI
-		URI: string(b.Name),
+		URI: protocol.DocumentURI(b.URI()),
 	}
 }
 

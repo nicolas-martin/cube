@@ -18,12 +18,12 @@ import (
 	"testing"
 
 	"golang.org/x/tools/go/packages/packagestest"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/cmd"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/protocol"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/source"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/tests"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/span"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/tool"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/cmd"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/protocol"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/source"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/tests"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/span"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/tool"
 )
 
 type runner struct {

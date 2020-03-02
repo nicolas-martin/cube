@@ -12,11 +12,11 @@ import (
 	"regexp"
 
 	"golang.org/x/mod/modfile"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/protocol"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/source"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/telemetry"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry/log"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry/trace"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/protocol"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/source"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/telemetry"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry/log"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry/trace"
 )
 
 func Diagnostics(ctx context.Context, snapshot source.Snapshot) (map[source.FileIdentity][]source.Diagnostic, map[string]*modfile.Require, error) {

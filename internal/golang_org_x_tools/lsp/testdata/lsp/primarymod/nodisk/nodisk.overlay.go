@@ -1,7 +1,7 @@
 package nodisk
 
 import (
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/foo"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/foo"
 )
 
 func _() {

@@ -7,11 +7,11 @@ package lsp
 import (
 	"context"
 
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/protocol"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/source"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/telemetry"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry/log"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry/trace"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/protocol"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/source"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/telemetry"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry/log"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry/trace"
 )
 
 func (s *Server) documentSymbol(ctx context.Context, params *protocol.DocumentSymbolParams) ([]protocol.DocumentSymbol, error) {

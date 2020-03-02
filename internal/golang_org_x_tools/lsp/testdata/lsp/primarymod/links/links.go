@@ -3,7 +3,7 @@ package links
 import (
 	"fmt" //@link(`fmt`,"https://pkg.go.dev/fmt")
 
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/foo" //@link(`github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/foo`,`https://pkg.go.dev/github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/foo`)
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/foo" //@link(`github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/foo`,`https://pkg.go.dev/github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/foo`)
 
 	_ "database/sql" //@link(`database/sql`, `https://pkg.go.dev/database/sql`)
 

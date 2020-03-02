@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/xcontext"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/xcontext"
 )
 
 type contextKey int

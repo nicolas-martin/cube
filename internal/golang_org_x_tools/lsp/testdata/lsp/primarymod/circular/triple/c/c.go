@@ -1,5 +1,5 @@
 package c
 
 import (
-	_ "github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/circular/triple/a"
+	_ "github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/circular/triple/a"
 )

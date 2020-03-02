@@ -16,7 +16,7 @@ import (
 
 	"golang.org/x/mod/module"
 	"golang.org/x/mod/semver"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/gopathwalk"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/gopathwalk"
 )
 
 // ModuleResolver implements resolver for modules using the go command as little

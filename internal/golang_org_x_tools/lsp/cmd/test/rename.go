@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/span"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/span"
 )
 
 func (r *runner) Rename(t *testing.T, spn span.Span, newText string) {

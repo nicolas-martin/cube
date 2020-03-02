@@ -8,7 +8,7 @@ package tag
 import (
 	"context"
 
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry"
 )
 
 // Key represents the key for a context tag.

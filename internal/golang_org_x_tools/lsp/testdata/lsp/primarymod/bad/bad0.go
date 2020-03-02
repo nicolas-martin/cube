@@ -2,7 +2,7 @@
 
 package bad
 
-import _ "github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/assign/internal/secret" //@diag("\"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/assign/internal/secret\"", "compiler", "could not import github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/assign/internal/secret (invalid use of internal package github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/assign/internal/secret)", "error")
+import _ "github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/assign/internal/secret" //@diag("\"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/assign/internal/secret\"", "compiler", "could not import github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/assign/internal/secret (invalid use of internal package github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/assign/internal/secret)", "error")
 
 func stuff() { //@item(stuff, "stuff", "func()", "func")
 	x := "heeeeyyyy"

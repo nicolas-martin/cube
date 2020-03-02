@@ -1,8 +1,8 @@
 package b
 
 import (
-	myFoo "github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/foo" //@mark(myFoo, "myFoo"),godef("myFoo", myFoo)
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/godef/a"   //@mark(AImport, re"\".*\"")
+	myFoo "github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/foo" //@mark(myFoo, "myFoo"),godef("myFoo", myFoo)
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/godef/a"   //@mark(AImport, re"\".*\"")
 )
 
 type S1 struct { //@S1

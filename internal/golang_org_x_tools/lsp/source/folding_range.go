@@ -6,7 +6,7 @@ import (
 	"go/token"
 	"sort"
 
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/protocol"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/protocol"
 )
 
 type FoldingRangeInfo struct {

@@ -1,7 +1,7 @@
 package errors
 
 import (
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/types"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/types"
 )
 
 func _() {

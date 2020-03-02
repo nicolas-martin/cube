@@ -13,8 +13,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/span"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/testenv"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/span"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/testenv"
 )
 
 func (r *runner) Format(t *testing.T, spn span.Span) {

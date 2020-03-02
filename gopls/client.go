@@ -13,7 +13,6 @@ import (
 	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/diff/myers"
 	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/protocol"
 	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/source"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/span"
 	"github.com/nicolas-martin/cube/internal/types"
 	"gopkg.in/tomb.v2"
 )
@@ -111,7 +110,8 @@ func NewGoPlsClient(errChan chan error) *Client {
 
 	//TODO: probably shouldn't hardcode this..
 	// params.RootURI = string(span.FileURI(c.Client.app.wd))
-	params.RootURI = string(span.FileURI("tmp-wd"))
+	params.RootURI = protocol.URIFromPath("tmp-wd")
+
 	params.Capabilities.Workspace.Configuration = true
 	opts := source.DefaultOptions()
 	params.Capabilities.TextDocument.Hover = protocol.HoverClientCapabilities{

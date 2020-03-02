@@ -14,9 +14,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/protocol"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/source"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/span"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/protocol"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/source"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/span"
 )
 
 // DiffLinks takes the links we got and checks if they are located within the source or a Note.

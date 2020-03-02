@@ -12,11 +12,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/jsonrpc2"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/cache"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/lsprpc"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/protocol"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/tool"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/jsonrpc2"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/cache"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/lsprpc"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/protocol"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/tool"
 )
 
 // Serve is a struct that exposes the configurable parts of the LSP server as

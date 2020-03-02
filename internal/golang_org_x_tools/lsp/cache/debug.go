@@ -7,8 +7,8 @@ package cache
 import (
 	"sort"
 
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/debug"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/span"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/debug"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/span"
 )
 
 type debugView struct{ *view }

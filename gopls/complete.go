@@ -15,7 +15,7 @@ func (c *Client) Complete(args ...json.RawMessage) (interface{}, error) {
 		TextDocumentPositionParams: protocol.TextDocumentPositionParams{
 			TextDocument: protocol.TextDocumentIdentifier{
 				// NOTE: assume 1 file only
-				URI: c.Buffer.Name,
+				URI: protocol.DocumentURI(c.Buffer.URI()),
 			},
 			Position: c.Point.ToPosition(),
 		},

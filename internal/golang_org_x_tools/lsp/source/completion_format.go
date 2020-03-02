@@ -13,13 +13,13 @@ import (
 	"go/types"
 	"strings"
 
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/imports"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/protocol"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/snippet"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/telemetry"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/span"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry/log"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry/tag"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/imports"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/protocol"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/snippet"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/telemetry"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/span"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry/log"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry/tag"
 	errors "golang.org/x/xerrors"
 )
 

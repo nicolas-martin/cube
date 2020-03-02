@@ -18,7 +18,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/fastwalk"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/fastwalk"
 )
 
 // Options controls the behavior of a Walk call.

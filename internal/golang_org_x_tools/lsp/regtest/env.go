@@ -18,12 +18,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/jsonrpc2/servertest"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/cache"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/debug"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/fake"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/lsprpc"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/protocol"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/jsonrpc2/servertest"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/cache"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/debug"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/fake"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/lsprpc"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/protocol"
 )
 
 // EnvMode is a bitmask that defines in which execution environments a test

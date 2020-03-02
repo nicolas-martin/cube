@@ -10,11 +10,11 @@ import (
 	"fmt"
 	"io/ioutil"
 
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/diff"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/protocol"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/source"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/span"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/tool"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/diff"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/protocol"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/source"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/span"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/tool"
 	errors "golang.org/x/xerrors"
 )
 

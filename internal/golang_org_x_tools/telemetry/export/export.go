@@ -13,7 +13,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry"
 )
 
 type Exporter interface {

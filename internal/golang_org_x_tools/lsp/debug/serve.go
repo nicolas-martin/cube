@@ -27,14 +27,14 @@ import (
 	"sync"
 	"time"
 
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/protocol"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/span"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry/export"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry/export/ocagent"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry/export/prometheus"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry/log"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry/tag"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/protocol"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/span"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry/export"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry/export/ocagent"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry/export/prometheus"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry/log"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry/tag"
 )
 
 // An Instance holds all debug information associated with a gopls instance.

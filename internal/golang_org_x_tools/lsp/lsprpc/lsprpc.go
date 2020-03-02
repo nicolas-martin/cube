@@ -19,12 +19,12 @@ import (
 	"time"
 
 	"golang.org/x/sync/errgroup"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/jsonrpc2"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/cache"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/debug"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/protocol"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry/log"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/jsonrpc2"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/cache"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/debug"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/protocol"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry/log"
 )
 
 // AutoNetwork is the pseudo network type used to signal that gopls should use

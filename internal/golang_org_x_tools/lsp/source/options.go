@@ -37,10 +37,10 @@ import (
 	"golang.org/x/tools/go/analysis/passes/unreachable"
 	"golang.org/x/tools/go/analysis/passes/unsafeptr"
 	"golang.org/x/tools/go/analysis/passes/unusedresult"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/diff"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/diff/myers"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/protocol"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry/tag"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/diff"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/diff/myers"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/protocol"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry/tag"
 	errors "golang.org/x/xerrors"
 )
 

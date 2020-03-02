@@ -9,9 +9,9 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/jsonrpc2"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/telemetry"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry/trace"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/jsonrpc2"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/telemetry"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry/trace"
 )
 
 type telemetryHandler struct{}

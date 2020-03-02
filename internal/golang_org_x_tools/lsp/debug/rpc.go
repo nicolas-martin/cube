@@ -12,9 +12,9 @@ import (
 	"net/http"
 	"sort"
 
-	tlm "github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/telemetry"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry/metric"
+	tlm "github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/telemetry"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry/metric"
 )
 
 var rpcTmpl = template.Must(template.Must(baseTemplate.Clone()).Parse(`

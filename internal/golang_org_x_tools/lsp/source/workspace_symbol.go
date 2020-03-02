@@ -11,10 +11,10 @@ import (
 	"go/types"
 	"strings"
 
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/fuzzy"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/protocol"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry/log"
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry/trace"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/fuzzy"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/protocol"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry/log"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry/trace"
 )
 
 const maxSymbols = 100

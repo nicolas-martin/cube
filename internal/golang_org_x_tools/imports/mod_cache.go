@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/gopathwalk"
+	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/gopathwalk"
 )
 
 // To find packages to import, the resolver needs to know about all of the

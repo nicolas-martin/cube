@@ -37,6 +37,12 @@ func (l loggingGoplsServer) Initialized(ctxt context.Context, params *protocol.I
 	return err
 }
 
+func (l loggingGoplsServer) PrepareRename(ctxt context.Context, params *protocol.PrepareRenameParams) (*protocol.Range, error) {
+	fmt.Printf("gopls.PrepareRename() call; params:\n%v", pretty.Sprint(params))
+	res, err := l.u.PrepareRename(ctxt, params)
+	fmt.Printf("gopls.PrepareRename() return; err: %v; res\n%v", err, pretty.Sprint(res))
+	return res, err
+}
 func (l loggingGoplsServer) Shutdown(ctxt context.Context) error {
 	fmt.Printf("gopls.Shutdown() call")
 	err := l.u.Shutdown(ctxt)
@@ -296,13 +302,6 @@ func (l loggingGoplsServer) LogTraceNotification(ctxt context.Context, params *p
 	err := l.u.LogTraceNotification(ctxt, params)
 	fmt.Printf("gopls.LogTraceNotification() return; err: %v", err)
 	return err
-}
-
-func (l loggingGoplsServer) PrepareRename(ctxt context.Context, params *protocol.PrepareRenameParams) (interface{}, error) {
-	fmt.Printf("gopls.PrepareRename() call; params:\n%v", pretty.Sprint(params))
-	res, err := l.u.PrepareRename(ctxt, params)
-	fmt.Printf("gopls.PrepareRename() return; err: %v; res\n%v", err, pretty.Sprint(res))
-	return res, err
 }
 
 func (l loggingGoplsServer) SetTraceNotification(ctxt context.Context, params *protocol.SetTraceParams) error {
