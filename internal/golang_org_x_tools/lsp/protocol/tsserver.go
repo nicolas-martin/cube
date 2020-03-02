@@ -16,6 +16,7 @@ import (
 	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/xcontext"
 )
 
+//go:generate moq -out ../../../../gopls/server_test.go -pkg gopls . Server
 type Server interface {
 	DidChangeWorkspaceFolders(context.Context, *DidChangeWorkspaceFoldersParams) error
 	WorkDoneProgressCancel(context.Context, *WorkDoneProgressCancelParams) error

@@ -167,7 +167,7 @@ var _ protocol.Server = &ServerMock{}
 //             PrepareCallHierarchyFunc: func(in1 context.Context, in2 *protocol.CallHierarchyPrepareParams) ([]protocol.CallHierarchyItem, error) {
 // 	               panic("mock out the PrepareCallHierarchy method")
 //             },
-//             PrepareRenameFunc: func(in1 context.Context, in2 *protocol.PrepareRenameParams) (interface{}, error) {
+//             PrepareRenameFunc: func(in1 context.Context, in2 *protocol.PrepareRenameParams) (*protocol.Range, error) {
 // 	               panic("mock out the PrepareRename method")
 //             },
 //             ProgressFunc: func(in1 context.Context, in2 *protocol.ProgressParams) error {
@@ -331,7 +331,7 @@ type ServerMock struct {
 	PrepareCallHierarchyFunc func(in1 context.Context, in2 *protocol.CallHierarchyPrepareParams) ([]protocol.CallHierarchyItem, error)
 
 	// PrepareRenameFunc mocks the PrepareRename method.
-	PrepareRenameFunc func(in1 context.Context, in2 *protocol.PrepareRenameParams) (interface{}, error)
+	PrepareRenameFunc func(in1 context.Context, in2 *protocol.PrepareRenameParams) (*protocol.Range, error)
 
 	// ProgressFunc mocks the Progress method.
 	ProgressFunc func(in1 context.Context, in2 *protocol.ProgressParams) error
@@ -1846,7 +1846,7 @@ func (mock *ServerMock) PrepareCallHierarchyCalls() []struct {
 }
 
 // PrepareRename calls PrepareRenameFunc.
-func (mock *ServerMock) PrepareRename(in1 context.Context, in2 *protocol.PrepareRenameParams) (interface{}, error) {
+func (mock *ServerMock) PrepareRename(in1 context.Context, in2 *protocol.PrepareRenameParams) (*protocol.Range, error) {
 	if mock.PrepareRenameFunc == nil {
 		panic("ServerMock.PrepareRenameFunc: method is nil but Server.PrepareRename was just called")
 	}
