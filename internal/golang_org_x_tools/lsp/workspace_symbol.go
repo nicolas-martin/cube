@@ -7,9 +7,9 @@ package lsp
 import (
 	"context"
 
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/protocol"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/source"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry/trace"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/protocol"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/source"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry/trace"
 )
 
 func (s *Server) symbol(ctx context.Context, params *protocol.WorkspaceSymbolParams) ([]protocol.SymbolInformation, error) {

@@ -16,8 +16,8 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/protocol"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/span"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/protocol"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/span"
 	errors "golang.org/x/xerrors"
 )
 
@@ -147,7 +147,7 @@ func IsGenerated(ctx context.Context, snapshot Snapshot, uri span.URI) bool {
 		return false
 	}
 	ph := snapshot.View().Session().Cache().ParseGoHandle(fh, ParseHeader)
-	parsed, _, _, err := ph.Parse(ctx)
+	parsed, _, _, _, err := ph.Parse(ctx)
 	if err != nil {
 		return false
 	}
@@ -201,7 +201,7 @@ func nameToMappedRange(v View, pkg Package, pos token.Pos, name string) (mappedR
 
 func posToMappedRange(v View, pkg Package, pos, end token.Pos) (mappedRange, error) {
 	logicalFilename := v.Session().Cache().FileSet().File(pos).Position(pos).Filename
-	m, err := findMapperInPackage(v, pkg, span.FileURI(logicalFilename))
+	m, err := findMapperInPackage(v, pkg, span.URIFromPath(logicalFilename))
 	if err != nil {
 		return mappedRange{}, err
 	}
@@ -415,6 +415,23 @@ func isUntyped(T types.Type) bool {
 	return false
 }
 
+func isPkgName(obj types.Object) bool {
+	_, ok := obj.(*types.PkgName)
+	return ok
+}
+
+func isASTFile(n ast.Node) bool {
+	_, ok := n.(*ast.File)
+	return ok
+}
+
+func deslice(T types.Type) types.Type {
+	if slice, ok := T.Underlying().(*types.Slice); ok {
+		return slice.Elem()
+	}
+	return nil
+}
+
 // isSelector returns the enclosing *ast.SelectorExpr when pos is in the
 // selector.
 func enclosingSelector(path []ast.Node, pos token.Pos) *ast.SelectorExpr {
@@ -626,7 +643,7 @@ func findPosInPackage(v View, searchpkg Package, pos token.Pos) (*ast.File, Pack
 	if tok == nil {
 		return nil, nil, errors.Errorf("no file for pos in package %s", searchpkg.ID())
 	}
-	uri := span.FileURI(tok.Name())
+	uri := span.URIFromPath(tok.Name())
 
 	var (
 		ph  ParseGoHandle
@@ -642,7 +659,7 @@ func findPosInPackage(v View, searchpkg Package, pos token.Pos) (*ast.File, Pack
 	if err != nil {
 		return nil, nil, err
 	}
-	file, _, _, err := ph.Cached()
+	file, _, _, _, err := ph.Cached()
 	if err != nil {
 		return nil, nil, err
 	}
@@ -666,7 +683,7 @@ func findMapperInPackage(v View, searchpkg Package, uri span.URI) (*protocol.Col
 	if err != nil {
 		return nil, err
 	}
-	_, m, _, err := ph.Cached()
+	_, _, m, _, err := ph.Cached()
 	if err != nil {
 		return nil, err
 	}

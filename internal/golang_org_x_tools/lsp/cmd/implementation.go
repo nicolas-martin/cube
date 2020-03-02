@@ -10,9 +10,9 @@ import (
 	"fmt"
 	"sort"
 
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/protocol"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/span"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/tool"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/protocol"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/span"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/tool"
 )
 
 // implementation implements the implementation verb for gopls
@@ -72,7 +72,7 @@ func (i *implementation) Run(ctx context.Context, args ...string) error {
 
 	var spans []string
 	for _, impl := range implementations {
-		f := conn.AddFile(ctx, span.NewURI(impl.URI))
+		f := conn.AddFile(ctx, fileURI(impl.URI))
 		span, err := f.mapper.Span(impl)
 		if err != nil {
 			return err

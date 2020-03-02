@@ -11,8 +11,8 @@ import (
 	"context"
 	"time"
 
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry/export"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry/export"
 )
 
 //TODO: Do we need to do something more efficient than just store tags

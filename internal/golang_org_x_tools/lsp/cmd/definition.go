@@ -12,11 +12,11 @@ import (
 	"os"
 	"strings"
 
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/protocol"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/source"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/span"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/tool"
 	guru "golang.org/x/tools/cmd/guru/serial"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/protocol"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/source"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/span"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/tool"
 	errors "golang.org/x/xerrors"
 )
 
@@ -109,7 +109,7 @@ func (d *definition) Run(ctx context.Context, args ...string) error {
 	if hover == nil {
 		return errors.Errorf("%v: not an identifier", from)
 	}
-	file = conn.AddFile(ctx, span.NewURI(locs[0].URI))
+	file = conn.AddFile(ctx, fileURI(locs[0].URI))
 	if file.err != nil {
 		return errors.Errorf("%v: %v", from, file.err)
 	}

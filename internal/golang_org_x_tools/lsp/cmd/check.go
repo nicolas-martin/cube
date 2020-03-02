@@ -9,7 +9,7 @@ import (
 	"flag"
 	"fmt"
 
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/span"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/span"
 	errors "golang.org/x/xerrors"
 )
 
@@ -48,7 +48,7 @@ func (c *check) Run(ctx context.Context, args ...string) error {
 	}
 	defer conn.terminate(ctx)
 	for _, arg := range args {
-		uri := span.FileURI(arg)
+		uri := span.URIFromPath(arg)
 		uris = append(uris, uri)
 		file := conn.AddFile(ctx, uri)
 		if file.err != nil {

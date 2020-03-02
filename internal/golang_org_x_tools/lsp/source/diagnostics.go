@@ -11,13 +11,13 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/protocol"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/telemetry"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/span"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry/log"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry/trace"
 	"golang.org/x/mod/modfile"
 	"golang.org/x/tools/go/analysis"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/protocol"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/telemetry"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/span"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry/log"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry/trace"
 	errors "golang.org/x/xerrors"
 )
 
@@ -223,7 +223,7 @@ func missingModulesDiagnostics(ctx context.Context, snapshot Snapshot, reports m
 	if err != nil {
 		return err
 	}
-	file, m, _, err := snapshot.View().Session().Cache().ParseGoHandle(fh, ParseHeader).Parse(ctx)
+	file, _, m, _, err := snapshot.View().Session().Cache().ParseGoHandle(fh, ParseHeader).Parse(ctx)
 	if err != nil {
 		log.Error(ctx, "could not parse go file when checking for missing modules", err)
 		return err
@@ -355,7 +355,7 @@ func onlyDeletions(fixes []SuggestedFix) bool {
 			}
 		}
 	}
-	return true
+	return len(fixes) > 0
 }
 
 // hasUndeclaredErrors returns true if a package has a type error

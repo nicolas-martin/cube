@@ -12,10 +12,10 @@ import (
 	"go/types"
 	"strings"
 
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/protocol"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry/log"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry/trace"
 	"golang.org/x/tools/go/ast/astutil"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/protocol"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry/log"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry/trace"
 	errors "golang.org/x/xerrors"
 )
 
@@ -27,7 +27,7 @@ func Highlight(ctx context.Context, snapshot Snapshot, fh FileHandle, pos protoc
 	if err != nil {
 		return nil, fmt.Errorf("getting file for Highlight: %v", err)
 	}
-	file, m, _, err := pgh.Parse(ctx)
+	file, _, m, _, err := pgh.Parse(ctx)
 	if err != nil {
 		return nil, err
 	}

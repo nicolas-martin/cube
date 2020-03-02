@@ -11,14 +11,14 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/source"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/telemetry"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/packagesinternal"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/span"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry/log"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry/tag"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry/trace"
 	"golang.org/x/tools/go/packages"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/source"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/telemetry"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/packagesinternal"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/span"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry/log"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry/tag"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry/trace"
 	errors "golang.org/x/xerrors"
 )
 
@@ -33,6 +33,7 @@ type metadata struct {
 	errors          []packages.Error
 	deps            []packageID
 	missingDeps     map[packagePath]struct{}
+	module          *packagesinternal.Module
 
 	// config is the *packages.Config associated with the loaded package.
 	config *packages.Config
@@ -144,15 +145,16 @@ func (s *snapshot) setMetadata(ctx context.Context, pkgPath packagePath, pkg *pa
 		typesSizes: pkg.TypesSizes,
 		errors:     pkg.Errors,
 		config:     cfg,
+		module:     packagesinternal.GetModule(pkg),
 	}
 
 	for _, filename := range pkg.CompiledGoFiles {
-		uri := span.FileURI(filename)
+		uri := span.URIFromPath(filename)
 		m.compiledGoFiles = append(m.compiledGoFiles, uri)
 		s.addID(uri, m.id)
 	}
 	for _, filename := range pkg.GoFiles {
-		uri := span.FileURI(filename)
+		uri := span.URIFromPath(filename)
 		m.goFiles = append(m.goFiles, uri)
 		s.addID(uri, m.id)
 	}

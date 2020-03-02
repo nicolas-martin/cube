@@ -1,8 +1,8 @@
 package good //@diag("package", "no_diagnostics", "", "error")
 
 import (
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/types" //@item(types_import, "types", "\"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/types\"", "package")
-	_ "go/ast"                                                             //@prepare("go/ast", "_", "_")
+	_ "go/ast"                              //@prepare("go/ast", "_", "_")
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/types" //@item(types_import, "types", "\"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/types\"", "package")
 )
 
 func random() int { //@item(good_random, "random", "func() int", "func")

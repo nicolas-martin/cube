@@ -5,7 +5,7 @@ import (
 
 	"fmt"
 
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/span"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/span"
 )
 
 func (r *runner) Highlight(t *testing.T, spn span.Span, spans []span.Span) {

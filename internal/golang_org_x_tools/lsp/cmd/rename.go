@@ -13,11 +13,11 @@ import (
 	"path/filepath"
 	"sort"
 
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/diff"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/protocol"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/source"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/span"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/tool"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/diff"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/protocol"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/source"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/span"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/tool"
 	errors "golang.org/x/xerrors"
 )
 
@@ -81,15 +81,15 @@ func (r *rename) Run(ctx context.Context, args ...string) error {
 	var orderedURIs []string
 	edits := map[span.URI][]protocol.TextEdit{}
 	for _, c := range edit.DocumentChanges {
-		uri := span.NewURI(c.TextDocument.URI)
+		uri := fileURI(c.TextDocument.URI)
 		edits[uri] = append(edits[uri], c.Edits...)
-		orderedURIs = append(orderedURIs, c.TextDocument.URI)
+		orderedURIs = append(orderedURIs, string(uri))
 	}
 	sort.Strings(orderedURIs)
 	changeCount := len(orderedURIs)
 
 	for _, u := range orderedURIs {
-		uri := span.NewURI(u)
+		uri := span.URIFromURI(u)
 		cmdFile := conn.AddFile(ctx, uri)
 		filename := cmdFile.uri.Filename()
 

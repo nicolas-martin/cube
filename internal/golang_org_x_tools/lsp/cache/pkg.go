@@ -9,9 +9,10 @@ import (
 	"go/ast"
 	"go/types"
 
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/protocol"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/source"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/span"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/protocol"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/source"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/packagesinternal"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/span"
 	errors "golang.org/x/xerrors"
 )
 
@@ -26,6 +27,7 @@ type pkg struct {
 	compiledGoFiles []source.ParseGoHandle
 	errors          []*source.Error
 	imports         map[packagePath]*pkg
+	module          *packagesinternal.Module
 	types           *types.Package
 	typesInfo       *types.Info
 	typesSizes      types.Sizes
@@ -71,7 +73,7 @@ func (p *pkg) File(uri span.URI) (source.ParseGoHandle, error) {
 func (p *pkg) GetSyntax() []*ast.File {
 	var syntax []*ast.File
 	for _, ph := range p.compiledGoFiles {
-		file, _, _, err := ph.Cached()
+		file, _, _, _, err := ph.Cached()
 		if err == nil {
 			syntax = append(syntax, file)
 		}
@@ -117,6 +119,10 @@ func (p *pkg) Imports() []source.Package {
 		result = append(result, imp)
 	}
 	return result
+}
+
+func (p *pkg) Module() *packagesinternal.Module {
+	return p.module
 }
 
 func (s *snapshot) FindAnalysisError(ctx context.Context, pkgID, analyzerName, msg string, rng protocol.Range) (*source.Error, error) {

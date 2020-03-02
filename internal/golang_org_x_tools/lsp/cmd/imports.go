@@ -10,11 +10,11 @@ import (
 	"fmt"
 	"io/ioutil"
 
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/diff"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/protocol"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/source"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/span"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/tool"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/diff"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/protocol"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/source"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/span"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/tool"
 	errors "golang.org/x/xerrors"
 )
 
@@ -62,7 +62,7 @@ func (t *imports) Run(ctx context.Context, args ...string) error {
 	}
 	actions, err := conn.CodeAction(ctx, &protocol.CodeActionParams{
 		TextDocument: protocol.TextDocumentIdentifier{
-			URI: protocol.NewURI(uri),
+			URI: protocol.URIFromSpanURI(uri),
 		},
 	})
 	if err != nil {
@@ -74,7 +74,7 @@ func (t *imports) Run(ctx context.Context, args ...string) error {
 			continue
 		}
 		for _, c := range a.Edit.DocumentChanges {
-			if c.TextDocument.URI == string(uri) {
+			if fileURI(c.TextDocument.URI) == uri {
 				edits = append(edits, c.Edits...)
 			}
 		}

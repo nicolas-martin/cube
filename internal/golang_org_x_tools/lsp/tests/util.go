@@ -14,14 +14,14 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/protocol"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/source"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/span"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/protocol"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/source"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/span"
 )
 
 // DiffLinks takes the links we got and checks if they are located within the source or a Note.
 // If the link is within a Note, the link is removed.
-// Returns an diff comment if there are differences and empty string if no diffs
+// Returns an diff comment if there are differences and empty string if no diffs.
 func DiffLinks(mapper *protocol.ColumnMapper, wantLinks []Link, gotLinks []protocol.DocumentLink) string {
 	var notePositions []token.Position
 	links := make(map[span.Span]string, len(wantLinks))
@@ -36,7 +36,7 @@ func DiffLinks(mapper *protocol.ColumnMapper, wantLinks []Link, gotLinks []proto
 		}
 		linkInNote := false
 		for _, notePosition := range notePositions {
-			// Drop the links found inside expectation notes arguments as this links are not collected by expect package
+			// Drop the links found inside expectation notes arguments as this links are not collected by expect package.
 			if notePosition.Line == spn.Start().Line() &&
 				notePosition.Column <= spn.Start().Column() {
 				delete(links, spn)
@@ -49,7 +49,7 @@ func DiffLinks(mapper *protocol.ColumnMapper, wantLinks []Link, gotLinks []proto
 		if target, ok := links[spn]; ok {
 			delete(links, spn)
 			if target != link.Target {
-				return fmt.Sprintf("for %v want %v, got %v\n", spn, link.Target, target)
+				return fmt.Sprintf("for %v want %v, got %v\n", spn, target, link.Target)
 			}
 		} else {
 			return fmt.Sprintf("unexpected link %v:%v\n", spn, link.Target)
@@ -109,7 +109,7 @@ func summarizeSymbols(t *testing.T, i int, want, got []protocol.DocumentSymbol, 
 func FilterWorkspaceSymbols(got []protocol.SymbolInformation, dirs map[string]struct{}) []protocol.SymbolInformation {
 	var result []protocol.SymbolInformation
 	for _, si := range got {
-		if _, ok := dirs[filepath.Dir(si.Location.URI)]; ok {
+		if _, ok := dirs[filepath.Dir(si.Location.URI.SpanURI().Filename())]; ok {
 			result = append(result, si)
 		}
 	}
@@ -212,6 +212,67 @@ func summarizeDiagnostics(i int, uri span.URI, want []source.Diagnostic, got []s
 	fmt.Fprintf(msg, "got:\n")
 	for _, d := range got {
 		fmt.Fprintf(msg, "  %s:%v: %s\n", uri, d.Range, d.Message)
+	}
+	return msg.String()
+}
+
+func DiffCodeLens(uri span.URI, want, got []protocol.CodeLens) string {
+	sortCodeLens(want)
+	sortCodeLens(got)
+
+	if len(got) != len(want) {
+		return summarizeCodeLens(-1, uri, want, got, "different lengths got %v want %v", len(got), len(want))
+	}
+	for i, w := range want {
+		g := got[i]
+		if w.Command.Title != g.Command.Title {
+			return summarizeCodeLens(i, uri, want, got, "incorrect Command Title got %v want %v", g.Command.Title, w.Command.Title)
+		}
+		if w.Command.Command != g.Command.Command {
+			return summarizeCodeLens(i, uri, want, got, "incorrect Command Title got %v want %v", g.Command.Command, w.Command.Command)
+		}
+		if protocol.ComparePosition(w.Range.Start, g.Range.Start) != 0 {
+			return summarizeCodeLens(i, uri, want, got, "incorrect Start got %v want %v", g.Range.Start, w.Range.Start)
+		}
+		if !protocol.IsPoint(g.Range) { // Accept any 'want' range if the codelens returns a zero-length range.
+			if protocol.ComparePosition(w.Range.End, g.Range.End) != 0 {
+				return summarizeCodeLens(i, uri, want, got, "incorrect End got %v want %v", g.Range.End, w.Range.End)
+			}
+		}
+	}
+	return ""
+}
+
+func sortCodeLens(c []protocol.CodeLens) {
+	sort.Slice(c, func(i int, j int) bool {
+		if r := protocol.CompareRange(c[i].Range, c[j].Range); r != 0 {
+			return r < 0
+		}
+		if c[i].Command.Command < c[j].Command.Command {
+			return true
+		}
+		if c[i].Command.Command == c[j].Command.Command {
+			return true
+		}
+		return c[i].Command.Title <= c[j].Command.Title
+	})
+}
+
+func summarizeCodeLens(i int, uri span.URI, want, got []protocol.CodeLens, reason string, args ...interface{}) string {
+	msg := &bytes.Buffer{}
+	fmt.Fprint(msg, "codelens failed")
+	if i >= 0 {
+		fmt.Fprintf(msg, " at %d", i)
+	}
+	fmt.Fprint(msg, " because of ")
+	fmt.Fprintf(msg, reason, args...)
+	fmt.Fprint(msg, ":\nexpected:\n")
+	for _, d := range want {
+		fmt.Fprintf(msg, "  %s:%v: %s | %s\n", uri, d.Range, d.Command.Command, d.Command.Title)
+	}
+	fmt.Fprintf(msg, "got:\n")
+	for _, d := range got {
+		fmt.Fprintf(msg, "  %s:%v: %s | %s\n", uri, d.Range, d.Command.Command, d.Command.Title)
 	}
 	return msg.String()
 }

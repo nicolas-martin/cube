@@ -12,9 +12,9 @@ import (
 	"go/types"
 	"strconv"
 
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/protocol"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry/trace"
 	"golang.org/x/tools/go/ast/astutil"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/protocol"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry/trace"
 	errors "golang.org/x/xerrors"
 )
 
@@ -56,7 +56,7 @@ func Identifier(ctx context.Context, snapshot Snapshot, fh FileHandle, pos proto
 	if err != nil {
 		return nil, fmt.Errorf("getting file for Identifier: %v", err)
 	}
-	file, m, _, err := pgh.Cached()
+	file, _, m, _, err := pgh.Cached()
 	if err != nil {
 		return nil, err
 	}

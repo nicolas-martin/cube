@@ -8,9 +8,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry/export/ocagent/wire"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry/metric"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry/export/ocagent/wire"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry/metric"
 )
 
 // dataToMetricDescriptor return a *wire.MetricDescriptor based on data.

@@ -8,9 +8,9 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/protocol"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/tests"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/span"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/protocol"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/tests"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/span"
 )
 
 func (r *runner) Link(t *testing.T, uri span.URI, wantLinks []tests.Link) {

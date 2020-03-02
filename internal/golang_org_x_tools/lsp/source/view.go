@@ -11,12 +11,13 @@ import (
 	"go/token"
 	"go/types"
 
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/imports"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/protocol"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/span"
 	"golang.org/x/mod/modfile"
 	"golang.org/x/tools/go/analysis"
 	"golang.org/x/tools/go/packages"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/imports"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/protocol"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/packagesinternal"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/span"
 )
 
 // Snapshot represents the current state for the given view.
@@ -33,9 +34,11 @@ type Snapshot interface {
 	// if it is not already part of the view.
 	GetFile(uri span.URI) (FileHandle, error)
 
-	// IsOpen returns whether the editor currently has a file open,
-	// and if its contents are saved on disk or not.
+	// IsOpen returns whether the editor currently has a file open.
 	IsOpen(uri span.URI) bool
+
+	// IsSaved returns whether the contents are saved on disk or not.
+	IsSaved(uri span.URI) bool
 
 	// Analyze runs the analyses for the given package at this snapshot.
 	Analyze(ctx context.Context, id string, analyzers []*analysis.Analyzer) ([]*Error, error)
@@ -47,6 +50,10 @@ type Snapshot interface {
 	// ModTidyHandle returns a ModTidyHandle for the given go.mod file handle.
 	// This function can have no data or error if there is no modfile detected.
 	ModTidyHandle(ctx context.Context, fh FileHandle) (ModTidyHandle, error)
+
+	// ModHandle returns a ModHandle for the passed in go.mod file handle.
+	// This function can have no data if there is no modfile detected.
+	ModHandle(ctx context.Context, fh FileHandle) ModHandle
 
 	// PackageHandles returns the PackageHandles for the packages that this file
 	// belongs to.
@@ -222,9 +229,6 @@ type Cache interface {
 	// A FileSystem that reads file contents from external storage.
 	FileSystem
 
-	// NewSession creates a new Session manager and returns it.
-	NewSession() Session
-
 	// FileSet returns the shared fileset used by all files in the system.
 	FileSet() *token.FileSet
 
@@ -248,13 +252,34 @@ type ParseGoHandle interface {
 
 	// Parse returns the parsed AST for the file.
 	// If the file is not available, returns nil and an error.
-	Parse(ctx context.Context) (*ast.File, *protocol.ColumnMapper, error, error)
+	Parse(ctx context.Context) (file *ast.File, src []byte, m *protocol.ColumnMapper, parseErr error, err error)
 
 	// Cached returns the AST for this handle, if it has already been stored.
-	Cached() (*ast.File, *protocol.ColumnMapper, error, error)
+	Cached() (file *ast.File, src []byte, m *protocol.ColumnMapper, parseErr error, err error)
 }
 
-// ModTidyHandle represents a handle to the modfile for a go.mod.
+// ModHandle represents a handle to the modfile for a go.mod.
+type ModHandle interface {
+	// File returns a file handle for which to get the modfile.
+	File() FileHandle
+
+	// Parse returns the parsed modfile and a mapper for the go.mod file.
+	// If the file is not available, returns nil and an error.
+	Parse(ctx context.Context) (*modfile.File, *protocol.ColumnMapper, error)
+
+	// Upgrades returns the parsed modfile, a mapper, and any dependency upgrades
+	// for the go.mod file. Note that this will only work if the go.mod is the view's go.mod.
+	// If the file is not available, returns nil and an error.
+	Upgrades(ctx context.Context) (*modfile.File, *protocol.ColumnMapper, map[string]string, error)
+
+	// Why returns the parsed modfile, a mapper, and any explanations why a dependency should be
+	// in the go.mod file. Note that this will only work if the go.mod is the view's go.mod.
+	// If the file is not available, returns nil and an error.
+	Why(ctx context.Context) (*modfile.File, *protocol.ColumnMapper, map[string]string, error)
+}
+
+// ModTidyHandle represents a handle to the modfile for the view.
+// Specifically for the purpose of getting diagnostics by running "go mod tidy".
 type ModTidyHandle interface {
 	// File returns a file handle for which to get the modfile.
 	File() FileHandle
@@ -346,6 +371,7 @@ type Package interface {
 	ForTest() string
 	GetImport(pkgPath string) (Package, error)
 	Imports() []Package
+	Module() *packagesinternal.Module
 }
 
 type Error struct {

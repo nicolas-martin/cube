@@ -12,8 +12,8 @@ import (
 	"sort"
 	"sync"
 
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry/metric"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry/metric"
 )
 
 func New() *Exporter {
@@ -24,11 +24,6 @@ type Exporter struct {
 	mu      sync.Mutex
 	metrics []telemetry.MetricData
 }
-
-func (e *Exporter) StartSpan(ctx context.Context, span *telemetry.Span)  {}
-func (e *Exporter) FinishSpan(ctx context.Context, span *telemetry.Span) {}
-func (e *Exporter) Log(ctx context.Context, event telemetry.Event)       {}
-func (e *Exporter) Flush()                                               {}
 
 func (e *Exporter) Metric(ctx context.Context, data telemetry.MetricData) {
 	e.mu.Lock()

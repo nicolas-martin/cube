@@ -14,7 +14,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry"
 )
 
 var traceTmpl = template.Must(template.Must(baseTemplate.Clone()).Parse(`
@@ -129,12 +129,6 @@ func (t *traces) FinishSpan(ctx context.Context, span *telemetry.Span) {
 		fillOffsets(td, td.Start)
 	}
 }
-
-func (t *traces) Log(ctx context.Context, event telemetry.Event) {}
-
-func (t *traces) Metric(ctx context.Context, data telemetry.MetricData) {}
-
-func (t *traces) Flush() {}
 
 func (t *traces) getData(req *http.Request) interface{} {
 	if len(t.sets) == 0 {

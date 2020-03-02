@@ -10,10 +10,6 @@ import (
 	"regexp"
 	"time"
 
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/diff"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/diff/myers"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/protocol"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry/tag"
 	"golang.org/x/tools/go/analysis"
 	"golang.org/x/tools/go/analysis/passes/asmdecl"
 	"golang.org/x/tools/go/analysis/passes/assign"
@@ -30,7 +26,6 @@ import (
 	"golang.org/x/tools/go/analysis/passes/loopclosure"
 	"golang.org/x/tools/go/analysis/passes/lostcancel"
 	"golang.org/x/tools/go/analysis/passes/nilfunc"
-	"golang.org/x/tools/go/analysis/passes/nilness"
 	"golang.org/x/tools/go/analysis/passes/printf"
 	"golang.org/x/tools/go/analysis/passes/shift"
 	"golang.org/x/tools/go/analysis/passes/sortslice"
@@ -42,6 +37,10 @@ import (
 	"golang.org/x/tools/go/analysis/passes/unreachable"
 	"golang.org/x/tools/go/analysis/passes/unsafeptr"
 	"golang.org/x/tools/go/analysis/passes/unusedresult"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/diff"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/diff/myers"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/protocol"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry/tag"
 	errors "golang.org/x/xerrors"
 )
 
@@ -67,7 +66,8 @@ func DefaultOptions() Options {
 				Sum: {},
 			},
 			SupportedCommands: []string{
-				"tidy", // for go.mod files
+				"tidy",               // for go.mod files
+				"upgrade.dependency", // for go.mod dependency upgrades
 			},
 		},
 		UserOptions: UserOptions{
@@ -83,7 +83,7 @@ func DefaultOptions() Options {
 			CompletionBudget: 100 * time.Millisecond,
 		},
 		ExperimentalOptions: ExperimentalOptions{
-			TempModfile: false,
+			TempModfile: true,
 		},
 		Hooks: Hooks{
 			ComputeEdits: myers.ComputeEdits,
@@ -488,7 +488,6 @@ func defaultAnalyzers() map[string]*analysis.Analyzer {
 
 		// Non-vet analyzers
 		deepequalerrors.Analyzer.Name:  deepequalerrors.Analyzer,
-		nilness.Analyzer.Name:          nilness.Analyzer,
 		sortslice.Analyzer.Name:        sortslice.Analyzer,
 		testinggoroutine.Analyzer.Name: testinggoroutine.Analyzer,
 	}

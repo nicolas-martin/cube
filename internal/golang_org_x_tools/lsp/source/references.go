@@ -10,8 +10,8 @@ import (
 	"go/token"
 	"go/types"
 
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/protocol"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry/trace"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/protocol"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry/trace"
 )
 
 // ReferenceInfo holds information about reference to an identifier in Go source.

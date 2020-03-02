@@ -1,4 +1,4 @@
-package foo //@mark(PackageFoo, "foo"),item(PackageFoo, "foo", "\"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/foo\"", "package")
+package foo //@mark(PackageFoo, "foo"),item(PackageFoo, "foo", "\"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/foo\"", "package")
 
 type StructFoo struct { //@item(StructFoo, "StructFoo", "struct{...}", "struct")
 	Value int //@item(Value, "Value", "int", "field")
@@ -27,4 +27,4 @@ func _() {
 	}
 }
 
-type IntFoo int //@item(IntFoo, "IntFoo", "int", "type"),complete("", Foo, IntFoo, StructFoo)
+type IntFoo int //@item(IntFoo, "IntFoo", "int", "type")

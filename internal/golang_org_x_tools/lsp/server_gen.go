@@ -5,7 +5,7 @@ package lsp
 import (
 	"context"
 
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/protocol"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/protocol"
 )
 
 func (s *Server) CodeAction(ctx context.Context, params *protocol.CodeActionParams) ([]protocol.CodeAction, error) {
@@ -132,7 +132,7 @@ func (s *Server) PrepareCallHierarchy(context.Context, *protocol.CallHierarchyPr
 	return nil, notImplemented("PrepareCallHierarchy")
 }
 
-func (s *Server) PrepareRename(ctx context.Context, params *protocol.PrepareRenameParams) (interface{}, error) {
+func (s *Server) PrepareRename(ctx context.Context, params *protocol.PrepareRenameParams) (*protocol.Range, error) {
 	return s.prepareRename(ctx, params)
 }
 

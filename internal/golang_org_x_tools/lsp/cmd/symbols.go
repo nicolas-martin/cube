@@ -10,9 +10,9 @@ import (
 	"fmt"
 	"sort"
 
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/protocol"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/span"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/tool"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/protocol"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/span"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/tool"
 )
 
 // symbols implements the symbols verb for gopls
@@ -44,7 +44,7 @@ func (r *symbols) Run(ctx context.Context, args ...string) error {
 	from := span.Parse(args[0])
 	p := protocol.DocumentSymbolParams{
 		TextDocument: protocol.TextDocumentIdentifier{
-			URI: string(from.URI()),
+			URI: protocol.URIFromSpanURI(from.URI()),
 		},
 	}
 

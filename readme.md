@@ -4,3 +4,6 @@ Cube aims to provide Langugae servers as a service. The motivation for this proj
 
 
 My first POC will be using GoPls but the end goal is to remain language agnostic.
+
+
+Heavily inspired by the work of [Paul Joly](https://github.com/myitcv) in [govim](https://github.com/govim/govim)

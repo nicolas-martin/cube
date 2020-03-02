@@ -9,9 +9,9 @@ import (
 	"flag"
 	"fmt"
 
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/protocol"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/span"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/tool"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/protocol"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/span"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/tool"
 )
 
 // foldingRanges implements the folding_ranges verb for gopls
@@ -50,7 +50,7 @@ func (r *foldingRanges) Run(ctx context.Context, args ...string) error {
 
 	p := protocol.FoldingRangeParams{
 		TextDocument: protocol.TextDocumentIdentifier{
-			URI: protocol.NewURI(from.URI()),
+			URI: protocol.URIFromSpanURI(from.URI()),
 		},
 	}
 

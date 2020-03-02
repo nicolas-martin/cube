@@ -6,16 +6,17 @@ package lsp
 
 import (
 	"context"
+	"fmt"
 	"strings"
 	"sync"
 
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/mod"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/protocol"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/source"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/telemetry"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry/log"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry/trace"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/xcontext"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/mod"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/protocol"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/source"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/telemetry"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry/log"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry/trace"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/xcontext"
 )
 
 type diagnosticKey struct {
@@ -43,6 +44,14 @@ func (s *Server) diagnoseSnapshot(snapshot source.Snapshot) {
 func (s *Server) diagnose(ctx context.Context, snapshot source.Snapshot, alwaysAnalyze bool) map[diagnosticKey][]source.Diagnostic {
 	ctx, done := trace.StartSpan(ctx, "lsp:background-worker")
 	defer done()
+
+	// Wait for a free diagnostics slot.
+	select {
+	case <-ctx.Done():
+		return nil
+	case s.diagnosticsSema <- struct{}{}:
+	}
+	defer func() { <-s.diagnosticsSema }()
 
 	allReports := make(map[diagnosticKey][]source.Diagnostic)
 	var reportsMu sync.Mutex
@@ -78,6 +87,18 @@ func (s *Server) diagnose(ctx context.Context, snapshot source.Snapshot, alwaysA
 		return nil
 	}
 	if err != nil {
+		// If we encounter a genuine error when getting workspace packages,
+		// notify the user.
+		s.showedInitialErrorMu.Lock()
+		if !s.showedInitialError {
+			err := s.client.ShowMessage(ctx, &protocol.ShowMessageParams{
+				Type:    protocol.Error,
+				Message: fmt.Sprintf("Your workspace is misconfigured: %s. Please see https://github.com/golang/tools/blob/master/gopls/doc/troubleshooting.md for more information or file an issue (https://github.com/golang/go/issues/new) if you believe this is a mistake.", err.Error()),
+			})
+			s.showedInitialError = err == nil
+		}
+		s.showedInitialErrorMu.Unlock()
+
 		log.Error(ctx, "diagnose: no workspace packages", err, telemetry.Snapshot.Of(snapshot.ID()), telemetry.Directory.Of(snapshot.View().Folder))
 		return nil
 	}
@@ -178,7 +199,7 @@ func (s *Server) publishReports(ctx context.Context, snapshot source.Snapshot, r
 
 		if err := s.client.PublishDiagnostics(ctx, &protocol.PublishDiagnosticsParams{
 			Diagnostics: toProtocolDiagnostics(diagnostics),
-			URI:         protocol.NewURI(key.id.URI),
+			URI:         protocol.URIFromSpanURI(key.id.URI),
 			Version:     key.id.Version,
 		}); err != nil {
 			if ctx.Err() == nil {
@@ -212,7 +233,7 @@ func toProtocolDiagnostics(diagnostics []source.Diagnostic) []protocol.Diagnosti
 		for _, rel := range diag.Related {
 			related = append(related, protocol.DiagnosticRelatedInformation{
 				Location: protocol.Location{
-					URI:   protocol.NewURI(rel.URI),
+					URI:   protocol.URIFromSpanURI(rel.URI),
 					Range: rel.Range,
 				},
 				Message: rel.Message,

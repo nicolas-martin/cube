@@ -10,8 +10,8 @@ import (
 	"go/ast"
 	"go/types"
 
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/protocol"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry/trace"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/protocol"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry/trace"
 )
 
 func DocumentSymbols(ctx context.Context, snapshot Snapshot, fh FileHandle) ([]protocol.DocumentSymbol, error) {
@@ -22,7 +22,7 @@ func DocumentSymbols(ctx context.Context, snapshot Snapshot, fh FileHandle) ([]p
 	if err != nil {
 		return nil, fmt.Errorf("getting file for DocumentSymbols: %v", err)
 	}
-	file, _, _, err := pgh.Cached()
+	file, _, _, _, err := pgh.Cached()
 	if err != nil {
 		return nil, err
 	}

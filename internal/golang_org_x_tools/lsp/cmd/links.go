@@ -11,9 +11,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/protocol"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/span"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/tool"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/protocol"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/span"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/tool"
 	errors "golang.org/x/xerrors"
 )
 
@@ -59,7 +59,7 @@ func (l *links) Run(ctx context.Context, args ...string) error {
 	}
 	results, err := conn.DocumentLink(ctx, &protocol.DocumentLinkParams{
 		TextDocument: protocol.TextDocumentIdentifier{
-			URI: protocol.NewURI(uri),
+			URI: protocol.URIFromSpanURI(uri),
 		},
 	})
 	if err != nil {

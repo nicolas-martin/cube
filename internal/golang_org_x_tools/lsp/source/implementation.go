@@ -11,8 +11,8 @@ import (
 	"go/token"
 	"go/types"
 
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/protocol"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry/trace"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/protocol"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry/trace"
 	errors "golang.org/x/xerrors"
 )
 
@@ -39,7 +39,7 @@ func Implementation(ctx context.Context, s Snapshot, f FileHandle, pp protocol.P
 			return nil, err
 		}
 		locations = append(locations, protocol.Location{
-			URI:   protocol.NewURI(rng.URI()),
+			URI:   protocol.URIFromSpanURI(rng.URI()),
 			Range: pr,
 		})
 	}
@@ -241,7 +241,7 @@ func getASTFile(pkg Package, f FileHandle, pos protocol.Position) (*ast.File, to
 		return nil, 0, err
 	}
 
-	file, m, _, err := pgh.Cached()
+	file, _, m, _, err := pgh.Cached()
 	if err != nil {
 		return nil, 0, err
 	}
@@ -299,7 +299,7 @@ func pathEnclosingObjNode(f *ast.File, pos token.Pos) []ast.Node {
 				}
 			}
 		case *ast.StarExpr:
-			// Follow star expressions to the inner identifer.
+			// Follow star expressions to the inner identifier.
 			if pos == n.Star {
 				pos = n.X.Pos()
 			}

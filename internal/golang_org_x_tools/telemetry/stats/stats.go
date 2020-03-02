@@ -12,7 +12,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry/unit"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry/unit"
 )
 
 // Int64Measure is used to record integer values.

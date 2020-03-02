@@ -11,12 +11,12 @@ import (
 	"fmt"
 	"regexp"
 
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/protocol"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/source"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/telemetry"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry/log"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry/trace"
 	"golang.org/x/mod/modfile"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/protocol"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/source"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/telemetry"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry/log"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry/trace"
 )
 
 func Diagnostics(ctx context.Context, snapshot source.Snapshot) (map[source.FileIdentity][]source.Diagnostic, map[string]*modfile.Require, error) {
@@ -105,7 +105,7 @@ func SuggestedFixes(ctx context.Context, snapshot source.Snapshot, realfh source
 						TextDocument: protocol.VersionedTextDocumentIdentifier{
 							Version: fh.Identity().Version,
 							TextDocumentIdentifier: protocol.TextDocumentIdentifier{
-								URI: protocol.NewURI(fh.Identity().URI),
+								URI: protocol.URIFromSpanURI(fh.Identity().URI),
 							},
 						},
 						Edits: edits,
@@ -188,7 +188,7 @@ func SuggestedGoFixes(ctx context.Context, snapshot source.Snapshot, gofh source
 						TextDocument: protocol.VersionedTextDocumentIdentifier{
 							Version: realfh.Identity().Version,
 							TextDocumentIdentifier: protocol.TextDocumentIdentifier{
-								URI: protocol.NewURI(realfh.Identity().URI),
+								URI: protocol.URIFromSpanURI(realfh.Identity().URI),
 							},
 						},
 						Edits: edits,

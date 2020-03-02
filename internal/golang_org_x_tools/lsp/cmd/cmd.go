@@ -19,16 +19,15 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/jsonrpc2"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/cache"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/protocol"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/source"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/span"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry/export"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry/export/ocagent"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/tool"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/xcontext"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/jsonrpc2"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/cache"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/debug"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/protocol"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/source"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/span"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/tool"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/xcontext"
 	errors "golang.org/x/xerrors"
 )
 
@@ -58,7 +57,7 @@ type Application struct {
 	env []string
 
 	// Support for remote lsp server
-	Remote string `flag:"remote" help:"*EXPERIMENTAL* - forward all commands to a remote lsp"`
+	Remote string `flag:"remote" help:"*EXPERIMENTAL* - forward all commands to a remote lsp specified by this flag. If prefixed by 'unix;', the subsequent address is assumed to be a unix domain socket. If 'auto', or prefixed by 'auto', the remote address is automatically resolved based on the executing environment. Otherwise, TCP is used."`
 
 	// Enable verbose logging
 	Verbose bool `flag:"v" help:"verbose output"`
@@ -69,6 +68,8 @@ type Application struct {
 	// PrepareOptions is called to update the options when a new view is built.
 	// It is primarily to allow the behavior of gopls to be modified by hooks.
 	PrepareOptions func(*source.Options)
+
+	debug *debug.Instance
 }
 
 // New returns a new Application ready to run.
@@ -130,10 +131,7 @@ gopls flags are:
 // If no arguments are passed it will invoke the server sub command, as a
 // temporary measure for compatibility.
 func (app *Application) Run(ctx context.Context, args ...string) error {
-	ocConfig := ocagent.Discover()
-	//TODO: we should not need to adjust the discovered configuration
-	ocConfig.Address = app.OCAgent
-	export.AddExporters(ocagent.Connect(ocConfig))
+	app.debug = debug.NewInstance(app.wd, app.OCAgent)
 	app.Serve.app = app
 	if len(args) == 0 {
 		return tool.Run(ctx, &app.Serve, args)
@@ -193,7 +191,7 @@ func (app *Application) connect(ctx context.Context) (*connection, error) {
 	switch {
 	case app.Remote == "":
 		connection := newConnection(app)
-		connection.Server = lsp.NewServer(cache.New(app.options).NewSession(), connection.Client)
+		connection.Server = lsp.NewServer(cache.New(app.options, nil).NewSession(), connection.Client)
 		ctx = protocol.WithClient(ctx, connection.Client)
 		return connection, connection.initialize(ctx, app.options)
 	case strings.HasPrefix(app.Remote, "internal@"):
@@ -233,7 +231,7 @@ func (app *Application) connectRemote(ctx context.Context, remote string) (*conn
 
 func (c *connection) initialize(ctx context.Context, options func(*source.Options)) error {
 	params := &protocol.ParamInitialize{}
-	params.RootURI = string(span.FileURI(c.Client.app.wd))
+	params.RootURI = protocol.URIFromPath(c.Client.app.wd)
 	params.Capabilities.Workspace.Configuration = true
 
 	// Make sure to respect configured options when sending initialize request.
@@ -287,6 +285,15 @@ func newConnection(app *Application) *connection {
 			files: make(map[span.URI]*cmdFile),
 		},
 	}
+}
+
+// fileURI converts a DocumentURI to a file:// span.URI, panicking if it's not a file.
+func fileURI(uri protocol.DocumentURI) span.URI {
+	sURI := uri.SpanURI()
+	if !sURI.IsFile() {
+		panic(fmt.Sprintf("%q is not a file URI", uri))
+	}
+	return sURI
 }
 
 func (c *cmdClient) ShowMessage(ctx context.Context, p *protocol.ShowMessageParams) error { return nil }
@@ -369,8 +376,7 @@ func (c *cmdClient) PublishDiagnostics(ctx context.Context, p *protocol.PublishD
 	c.filesMu.Lock()
 	defer c.filesMu.Unlock()
 
-	uri := span.NewURI(p.URI)
-	file := c.getFile(ctx, uri)
+	file := c.getFile(ctx, fileURI(p.URI))
 	file.diagnostics = p.Diagnostics
 	return nil
 }
@@ -420,7 +426,7 @@ func (c *connection) AddFile(ctx context.Context, uri span.URI) *cmdFile {
 	file.added = true
 	p := &protocol.DidOpenTextDocumentParams{
 		TextDocument: protocol.TextDocumentItem{
-			URI:        protocol.NewURI(uri),
+			URI:        protocol.URIFromSpanURI(uri),
 			LanguageID: source.DetectLanguage("", file.uri.Filename()).String(),
 			Version:    1,
 			Text:       string(file.mapper.Content),

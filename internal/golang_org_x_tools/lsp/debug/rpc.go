@@ -12,9 +12,9 @@ import (
 	"net/http"
 	"sort"
 
-	tlm "github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/telemetry"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry/metric"
+	tlm "github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/telemetry"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry/metric"
 )
 
 var rpcTmpl = template.Must(template.Must(baseTemplate.Clone()).Parse(`
@@ -89,11 +89,6 @@ type rpcCodeBucket struct {
 	Key   string
 	Count int64
 }
-
-func (r *rpcs) StartSpan(ctx context.Context, span *telemetry.Span)  {}
-func (r *rpcs) FinishSpan(ctx context.Context, span *telemetry.Span) {}
-func (r *rpcs) Log(ctx context.Context, event telemetry.Event)       {}
-func (r *rpcs) Flush()                                               {}
 
 func (r *rpcs) Metric(ctx context.Context, data telemetry.MetricData) {
 	for i, group := range data.Groups() {

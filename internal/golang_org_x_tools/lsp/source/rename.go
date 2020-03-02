@@ -13,11 +13,11 @@ import (
 	"go/types"
 	"regexp"
 
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/diff"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/protocol"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/span"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry/trace"
 	"golang.org/x/tools/go/types/typeutil"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/diff"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/protocol"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/span"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry/trace"
 	"golang.org/x/tools/refactor/satisfy"
 	errors "golang.org/x/xerrors"
 )

@@ -16,13 +16,13 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/source"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/telemetry"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/memoize"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/span"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry/log"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry/trace"
 	"golang.org/x/tools/go/packages"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/source"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/telemetry"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/memoize"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/span"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry/log"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry/trace"
 	errors "golang.org/x/xerrors"
 )
 
@@ -274,6 +274,7 @@ func typeCheck(ctx context.Context, fset *token.FileSet, m *metadata, mode sourc
 		mode:            mode,
 		goFiles:         goFiles,
 		compiledGoFiles: compiledGoFiles,
+		module:          m.module,
 		imports:         make(map[packagePath]*pkg),
 		typesSizes:      m.typesSizes,
 		typesInfo: &types.Info{
@@ -295,7 +296,7 @@ func typeCheck(ctx context.Context, fset *token.FileSet, m *metadata, mode sourc
 	for i, ph := range pkg.compiledGoFiles {
 		wg.Add(1)
 		go func(i int, ph source.ParseGoHandle) {
-			files[i], _, parseErrors[i], actualErrors[i] = ph.Parse(ctx)
+			files[i], _, _, parseErrors[i], actualErrors[i] = ph.Parse(ctx)
 			wg.Done()
 		}(i, ph)
 	}
@@ -367,6 +368,9 @@ func typeCheck(ctx context.Context, fset *token.FileSet, m *metadata, mode sourc
 			if dep == nil {
 				return nil, errors.Errorf("no package for import %s", pkgPath)
 			}
+			if !isValidImport(m.pkgPath, dep.m.pkgPath) {
+				return nil, errors.Errorf("invalid use of internal package %s", pkgPath)
+			}
 			depPkg, err := dep.check(ctx)
 			if err != nil {
 				return nil, err
@@ -397,6 +401,17 @@ func typeCheck(ctx context.Context, fset *token.FileSet, m *metadata, mode sourc
 		}
 	}
 	return pkg, nil
+}
+
+func isValidImport(pkgPath, importPkgPath packagePath) bool {
+	i := strings.LastIndex(string(importPkgPath), "/internal/")
+	if i == -1 {
+		return true
+	}
+	if pkgPath == "command-line-arguments" {
+		return true
+	}
+	return strings.HasPrefix(string(pkgPath), string(importPkgPath[:i]))
 }
 
 // An importFunc is an implementation of the single-method

@@ -9,9 +9,9 @@ import (
 	"flag"
 	"fmt"
 
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/protocol"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/span"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/tool"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/protocol"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/span"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/tool"
 )
 
 // prepareRename implements the prepare_rename verb for gopls.
@@ -69,12 +69,7 @@ func (r *prepareRename) Run(ctx context.Context, args ...string) error {
 		return fmt.Errorf("request is not valid at the given position")
 	}
 
-	resRange, ok := result.(protocol.Range)
-	if !ok {
-		return fmt.Errorf("prepare_rename failed to convert result to range, got: %T", result)
-	}
-
-	l := protocol.Location{Range: resRange}
+	l := protocol.Location{Range: *result}
 	s, err := file.mapper.Span(l)
 	if err != nil {
 		return err

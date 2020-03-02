@@ -10,8 +10,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/source"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/span"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/source"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/span"
 )
 
 func (r *runner) Diagnostics(t *testing.T, uri span.URI, want []source.Diagnostic) {

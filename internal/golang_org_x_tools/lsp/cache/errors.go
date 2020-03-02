@@ -14,13 +14,13 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/protocol"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/source"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/telemetry"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/span"
-	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/telemetry/log"
 	"golang.org/x/tools/go/analysis"
 	"golang.org/x/tools/go/packages"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/protocol"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/source"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/lsp/telemetry"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/span"
+	"github.com/govim/govim/cmd/govim/internal/golang_org_x_tools/telemetry/log"
 	errors "golang.org/x/xerrors"
 )
 
@@ -177,11 +177,11 @@ func toSourceErrorKind(kind packages.ErrorKind) source.ErrorKind {
 
 func typeErrorRange(ctx context.Context, fset *token.FileSet, pkg *pkg, pos token.Pos) (span.Span, error) {
 	posn := fset.Position(pos)
-	ph, _, err := source.FindFileInPackage(pkg, span.FileURI(posn.Filename))
+	ph, _, err := source.FindFileInPackage(pkg, span.URIFromPath(posn.Filename))
 	if err != nil {
 		return span.Span{}, err
 	}
-	_, m, _, err := ph.Cached()
+	_, _, m, _, err := ph.Cached()
 	if err != nil {
 		return span.Span{}, err
 	}
@@ -213,11 +213,11 @@ func typeErrorRange(ctx context.Context, fset *token.FileSet, pkg *pkg, pos toke
 }
 
 func scannerErrorRange(ctx context.Context, fset *token.FileSet, pkg *pkg, posn token.Position) (span.Span, error) {
-	ph, _, err := source.FindFileInPackage(pkg, span.FileURI(posn.Filename))
+	ph, _, err := source.FindFileInPackage(pkg, span.URIFromPath(posn.Filename))
 	if err != nil {
 		return span.Span{}, err
 	}
-	file, _, _, err := ph.Cached()
+	file, _, _, _, err := ph.Cached()
 	if err != nil {
 		return span.Span{}, err
 	}
@@ -236,7 +236,7 @@ func spanToRange(ctx context.Context, pkg *pkg, spn span.Span) (protocol.Range, 
 	if err != nil {
 		return protocol.Range{}, err
 	}
-	_, m, _, err := ph.Cached()
+	_, _, m, _, err := ph.Cached()
 	if err != nil {
 		return protocol.Range{}, err
 	}
@@ -276,7 +276,7 @@ func parseGoListImportCycleError(ctx context.Context, fset *token.FileSet, e pac
 	// Imports have quotation marks around them.
 	circImp := strconv.Quote(importList[1])
 	for _, ph := range pkg.compiledGoFiles {
-		fh, _, _, err := ph.Parse(ctx)
+		fh, _, _, _, err := ph.Parse(ctx)
 		if err != nil {
 			continue
 		}
