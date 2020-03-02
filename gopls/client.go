@@ -27,6 +27,14 @@ type Client struct {
 	tomb        tomb.Tomb
 }
 
+// IClient ...
+// type IClient interface {
+// 	Complete(args ...json.RawMessage) (interface{}, error)
+// 	FormatCurrentBuffer(args ...json.RawMessage) (err error)
+// 	organizeImports(args ...json.RawMessage) (err error)
+// 	applyEasyProtocolTextEdits(edits []protocol.TextEdit) error
+// }
+
 var _ protocol.Client = &clienthandler{}
 
 // NewGoPlsClient creates a GoPls client from the local running gopls server

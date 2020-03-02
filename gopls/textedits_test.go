@@ -29,8 +29,16 @@ func abc() {
 
 	fmt.Println(  "test")
 }`
-	c := createClient()
-	c.Buffer.SetContents([]byte(in))
+	c := createMockClient()
+	c.Buffer = &types.Buffer{
+		Name:     "tmp-wd/test.go",
+		Contents: []byte(in),
+	}
+	c.Server = &ServerMock{
+		DidChangeFunc: func(in1 context.Context, in2 *protocol.DidChangeTextDocumentParams) error {
+			return nil
+		},
+	}
 
 	edits := []protocol.TextEdit{
 		{
@@ -48,25 +56,19 @@ func abc() {
 			NewText: "",
 		}}
 
-	type fields struct {
-		Buffer      *types.Buffer
-		Point       *types.Point
-		Server      protocol.Server
-		goplsCancel context.CancelFunc
-	}
 	type args struct {
 		edits []protocol.TextEdit
 	}
 	tests := []struct {
 		name     string
-		fields   fields
+		fields   *Client
 		args     args
 		expected string
 		wantErr  bool
 	}{
 		{
 			name:     "test",
-			fields:   fields{},
+			fields:   c,
 			args:     args{edits: edits},
 			expected: e,
 			wantErr:  false,
@@ -74,12 +76,6 @@ func abc() {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c := &Client{
-				Buffer:      tt.fields.Buffer,
-				Point:       tt.fields.Point,
-				Server:      tt.fields.Server,
-				goplsCancel: tt.fields.goplsCancel,
-			}
 			if err := c.applyEasyProtocolTextEdits(tt.args.edits); (err != nil) != tt.wantErr {
 				t.Errorf("Client.applyEasyProtocolTextEdits() error = %v, wantErr %v", err, tt.wantErr)
 			}
@@ -92,6 +88,11 @@ func createClient() *Client {
 	errChan := make(chan error, 1)
 	c := NewGoPlsClient(errChan)
 	return c
+}
+
+func createMockClient() *Client {
+	goplsClient := &Client{}
+	return goplsClient
 }
 
 type inOut struct {

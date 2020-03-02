@@ -16,6 +16,7 @@ import (
 	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/xcontext"
 )
 
+//go:generate moq -out ../../../../gopls/server_test.go -pkg gopls . Server
 type Server interface {
 	DidChangeWorkspaceFolders(context.Context, *DidChangeWorkspaceFoldersParams) error
 	WorkDoneProgressCancel(context.Context, *WorkDoneProgressCancelParams) error
