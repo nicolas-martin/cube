@@ -2,7 +2,7 @@ package gopls
 
 import (
 	"context"
-	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/protocol"
@@ -11,24 +11,26 @@ import (
 )
 
 func TestClient_applyEasyProtocolTextEdits(t *testing.T) {
-	e := `
-package abc
+	e := `package abc
 
 import "fmt"
 
 func abc() {
 
-    fmt.Println("test")
-}`
-	in := `
-package abc
+	fmt.Println("test")
+}
+`
+	e = strings.ReplaceAll(e, "\n", "\r\n")
+
+	in := `package abc
 
 import "fmt"
 
 func abc() {
 
 	fmt.Println(  "test")
-}`
+}
+`
 	c := createMockClient()
 	c.Buffer = &types.Buffer{
 		Name:     "tmp-wd/test.go",
@@ -79,7 +81,7 @@ func abc() {
 			if err := c.applyEasyProtocolTextEdits(tt.args.edits); (err != nil) != tt.wantErr {
 				t.Errorf("Client.applyEasyProtocolTextEdits() error = %v, wantErr %v", err, tt.wantErr)
 			}
-			assert.Equal(t, tt.expected, fmt.Sprint(c.Buffer), "Buffers does not match")
+			assert.Equal(t, tt.expected, string(c.Buffer.Contents), "Buffers does not match")
 		})
 	}
 }
