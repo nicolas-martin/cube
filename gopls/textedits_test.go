@@ -10,7 +10,61 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestClient_applyEasyProtocolTextEdits(t *testing.T) {
+func TestApplyEasyProtocolTextEditsRemoveExtraLine(t *testing.T) {
+	e := `package abc
+
+import "fmt"
+
+func abc() {
+
+
+        fmt.Println("test")
+}`
+	e = strings.ReplaceAll(e, "\n", "\r\n")
+
+	in := `package abc
+
+import "fmt"
+
+func abc() {
+
+	fmt.Println("test")
+}
+`
+	c := createMockClient()
+	c.Buffer = &types.Buffer{
+		Name:     "tmp-wd/test.go",
+		Contents: []byte(in),
+	}
+	c.Server = &ServerMock{
+		DidChangeFunc: func(in1 context.Context, in2 *protocol.DidChangeTextDocumentParams) error {
+			return nil
+		},
+	}
+
+	edits := []protocol.TextEdit{
+		{
+			Range: protocol.Range{
+				Start: protocol.Position{Line: 6, Character: 0},
+				End:   protocol.Position{Line: 7, Character: 0},
+			},
+			NewText: "",
+		},
+		{
+			Range: protocol.Range{
+				Start: protocol.Position{Line: 7, Character: 20},
+				End:   protocol.Position{Line: 7, Character: 21},
+			},
+			NewText: "",
+		},
+	}
+	if err := c.applyEasyProtocolTextEdits(edits); err != nil {
+		t.Errorf("Client.applyEasyProtocolTextEdits() error = %v", err)
+	}
+	assert.Equal(t, e, string(c.Buffer.Contents), "Buffers does not match")
+}
+
+func TestApplyEasyProtocolTextEditsRemoveWhitespace(t *testing.T) {
 	e := `package abc
 
 import "fmt"
@@ -56,34 +110,13 @@ func abc() {
 				End:   protocol.Position{Line: 6, Character: 23},
 			},
 			NewText: "",
-		}}
-
-	type args struct {
-		edits []protocol.TextEdit
-	}
-	tests := []struct {
-		name     string
-		fields   *Client
-		args     args
-		expected string
-		wantErr  bool
-	}{
-		{
-			name:     "test",
-			fields:   c,
-			args:     args{edits: edits},
-			expected: e,
-			wantErr:  false,
 		},
 	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if err := c.applyEasyProtocolTextEdits(tt.args.edits); (err != nil) != tt.wantErr {
-				t.Errorf("Client.applyEasyProtocolTextEdits() error = %v, wantErr %v", err, tt.wantErr)
-			}
-			assert.Equal(t, tt.expected, string(c.Buffer.Contents), "Buffers does not match")
-		})
+
+	if err := c.applyEasyProtocolTextEdits(edits); err != nil {
+		t.Errorf("Client.applyEasyProtocolTextEdits() error = %v", err)
 	}
+	assert.Equal(t, e, string(c.Buffer.Contents), "Buffers does not match")
 }
 
 func createClient() *Client {
