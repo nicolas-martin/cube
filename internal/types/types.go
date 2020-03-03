@@ -44,6 +44,26 @@ func (p Point) GoplsChar() float64 {
 	return float64(p.utf16Col)
 }
 
+func PointFromVim(b *Buffer, line, col int) (Point, error) {
+	cc := b.tokenConvertor()
+	off, err := cc.ToOffset(line, col)
+	if err != nil {
+		return Point{}, fmt.Errorf("failed to calculate offset within buffer %v: %v", b.Num, err)
+	}
+	p := span.NewPoint(line, col, off)
+	utf16col, err := span.ToUTF16Column(p, b.Contents)
+	if err != nil {
+		return Point{}, fmt.Errorf("failed to calculate UTF16 char value: %v", err)
+	}
+	res := Point{
+		Line:     line,
+		Col:      col,
+		offset:   off,
+		utf16Col: utf16col - 1,
+	}
+	return res, nil
+}
+
 // Buffer represents the current state of the page
 type Buffer struct {
 	Name     string

@@ -27,13 +27,13 @@ func main() {
 		Col:  13,
 	}
 
-	err = c.FormatCurrentBuffer()
+	resp, err := c.SignatureHelp(nil)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	fmt.Println("\r\n= RESULT =")
-	fmt.Println(pretty.Print(string(c.Buffer.Contents)))
+	fmt.Println(pretty.Print(resp))
 	fmt.Println("= END RESULT =")
 	msg := <-errChan
 	fmt.Println(msg)

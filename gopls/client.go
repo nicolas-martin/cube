@@ -114,6 +114,11 @@ func NewGoPlsClient(errChan chan error) *Client {
 
 	params.Capabilities.Workspace.Configuration = true
 	opts := source.DefaultOptions()
+	params.Capabilities.TextDocument.SignatureHelp = protocol.SignatureHelpClientCapabilities{
+		DynamicRegistration: false,
+		ContextSupport:      true,
+	}
+
 	params.Capabilities.TextDocument.Hover = protocol.HoverClientCapabilities{
 		ContentFormat: []protocol.MarkupKind{opts.PreferredContentFormat},
 	}
