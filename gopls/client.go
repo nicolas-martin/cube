@@ -26,14 +26,6 @@ type Client struct {
 	tomb        tomb.Tomb
 }
 
-// IClient ...
-// type IClient interface {
-// 	Complete(args ...json.RawMessage) (interface{}, error)
-// 	FormatCurrentBuffer(args ...json.RawMessage) (err error)
-// 	organizeImports(args ...json.RawMessage) (err error)
-// 	applyEasyProtocolTextEdits(edits []protocol.TextEdit) error
-// }
-
 var _ protocol.Client = &clienthandler{}
 
 // NewGoPlsClient creates a GoPls client from the local running gopls server
@@ -41,7 +33,12 @@ func NewGoPlsClient(errChan chan error) *Client {
 	goplsClient := &Client{}
 	// Server
 	goplsArgs := []string{"-rpc.trace", "-logfile", "log"}
-	gopls := exec.Command("/Users/nmartin/go/bin/gopls", goplsArgs...)
+	goPath := os.Getenv("GOPATH")
+	if len(goPath) == 0 {
+		log.Fatal("GOPATH NOT SET")
+	}
+
+	gopls := exec.Command(fmt.Sprintf("%s/bin/gopls", goPath), goplsArgs...)
 
 	stdout, err := gopls.StdoutPipe()
 	if err != nil {

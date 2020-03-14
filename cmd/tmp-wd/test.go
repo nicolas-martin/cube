@@ -4,5 +4,6 @@ import "fmt"
 
 func abc() {
 
-	fmt.Printf("%v")
+
+        fmt.Println("test")
 }

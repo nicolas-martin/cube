@@ -2,6 +2,7 @@ package gopls
 
 import (
 	"context"
+	"fmt"
 	"strings"
 	"testing"
 
@@ -10,8 +11,9 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+//TODO: Bug, doesn't return the last `}`. Not sure if it's from me?
 func TestApplyEasyProtocolTextEditsRemoveExtraLine(t *testing.T) {
-	e := `package abc
+	in := `package abc
 
 import "fmt"
 
@@ -20,17 +22,16 @@ func abc() {
 
         fmt.Println("test")
 }`
-	e = strings.ReplaceAll(e, "\n", "\r\n")
+	in = strings.ReplaceAll(in, "\n", "\r\n")
 
-	in := `package abc
+	e := `package abc
 
 import "fmt"
 
 func abc() {
 
 	fmt.Println("test")
-}
-`
+}`
 	c := createMockClient()
 	c.Buffer = &types.Buffer{
 		Name:     "tmp-wd/test.go",
@@ -46,21 +47,23 @@ func abc() {
 		{
 			Range: protocol.Range{
 				Start: protocol.Position{Line: 6, Character: 0},
-				End:   protocol.Position{Line: 7, Character: 0},
+				End:   protocol.Position{Line: 7, Character: 8},
 			},
 			NewText: "",
 		},
 		{
 			Range: protocol.Range{
-				Start: protocol.Position{Line: 7, Character: 20},
-				End:   protocol.Position{Line: 7, Character: 21},
+				Start: protocol.Position{Line: 7, Character: 8},
+				End:   protocol.Position{Line: 7, Character: 8},
 			},
-			NewText: "",
+			NewText: "\t",
 		},
 	}
 	if err := c.applyEasyProtocolTextEdits(edits); err != nil {
 		t.Errorf("Client.applyEasyProtocolTextEdits() error = %v", err)
 	}
+	fmt.Println(e)
+	fmt.Println(string(c.Buffer.Contents))
 	assert.Equal(t, e, string(c.Buffer.Contents), "Buffers does not match")
 }
 

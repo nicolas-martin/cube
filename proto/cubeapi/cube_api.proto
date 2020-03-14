@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+service CubeAPI {
+    rpc Format(FormatRequest) returns (FormatResponse) {};
+}
+
+message FormatRequest {
+  string content = 1;
+}
+
+message FormatResponse {
+  string content = 1;
+}

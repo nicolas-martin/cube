@@ -36,8 +36,8 @@ func (c *Client) SignatureHelp(args ...json.RawMessage) (*protocol.SignatureHelp
 			WorkDoneToken: nil,
 		},
 	}
-	resp, err := c.Server.SignatureHelp(context.Background(), shp)
 
+	resp, err := c.Server.SignatureHelp(context.Background(), shp)
 	if err != nil {
 		return nil, err
 	}
