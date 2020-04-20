@@ -22,7 +22,8 @@ func abc() {
 
 
         fmt.Println("test")
-}`
+}
+`
 	in = strings.ReplaceAll(in, "\n", "\r\n")
 
 	e := `package abc
@@ -32,7 +33,8 @@ import "fmt"
 func abc() {
 
 	fmt.Println("test")
-}`
+}
+`
 	c := createMockClient()
 	c.Buffer = &types.Buffer{
 		Name:     "tmp-wd/test.go",

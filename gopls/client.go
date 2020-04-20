@@ -98,17 +98,17 @@ func NewGoPlsClient(errChan chan error, wdPath string) *Client {
 		return conn.Run(ctxt)
 	})
 
-	// s := loggingGoplsServer{
-	// 	u: server,
-	// }
+	s := loggingGoplsServer{
+		u: server,
+	}
 
-	goplsClient.Server = server
+	goplsClient.Server = s
 	params := &protocol.ParamInitialize{}
 
 	//TODO: probably shouldn't hardcode this..
-	params.WorkspaceFolders = []protocol.WorkspaceFolder{
-		{Name: "test", URI: string(protocol.URIFromPath(wdPath))},
-	}
+	// params.WorkspaceFolders = []protocol.WorkspaceFolder{
+	// 	{Name: "test", URI: string(protocol.URIFromPath(wdPath))},
+	// }
 	// RootURI is deprecated
 	params.RootURI = protocol.URIFromPath(wdPath)
 

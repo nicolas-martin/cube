@@ -22,7 +22,7 @@ func (c *Client) FormatCurrentBuffer(args ...json.RawMessage) (err error) {
 	}
 	edits, err = c.Server.Formatting(context.Background(), formatParams)
 	if err != nil {
-		log.Fatalf("gopls.Formatting returned an error; nothing to do")
+		log.Fatalf("gopls.Formatting returned an error; nothing to do: %s", err.Error())
 		return nil
 	}
 	if len(edits) != 0 {

@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -13,7 +12,7 @@ import (
 	"github.com/nicolas-martin/cube/internal/handler/http"
 	"github.com/nicolas-martin/cube/internal/repository"
 	"github.com/nicolas-martin/cube/internal/types"
-	"github.com/sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 )
 
 func main() {
@@ -26,11 +25,11 @@ func cmd() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	exeFp, _ := os.Getwd()
-	path := fmt.Sprintf("%s/%s", exeFp, fn)
+	// exeFp, _ := os.Getwd()
+	exeFp := "tmp-wd"
 
 	errChan := make(chan error, 1)
-	c := gopls.NewGoPlsClient(errChan, path)
+	c := gopls.NewGoPlsClient(errChan, exeFp)
 	c.Buffer = &types.Buffer{
 		Name:     "tmp-wd/test.go",
 		Contents: t,
@@ -53,7 +52,7 @@ func cmd() {
 }
 
 func initWebAPI() {
-	l := logrus.New()
+	l := log.New()
 	f, _ := os.Create("gin.log")
 	l.SetOutput(f)
 	tmpWd, _ := ioutil.TempDir("", "tmp-wd")
