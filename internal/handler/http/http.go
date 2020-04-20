@@ -1,12 +1,15 @@
 package http
 
 import (
+	"fmt"
 	"io/ioutil"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/nicolas-martin/cube/gopls"
 	"github.com/nicolas-martin/cube/internal/repository"
+	"github.com/nicolas-martin/cube/internal/types"
+	"github.com/nicolas-martin/cube/util"
 )
 
 // Handler ..
@@ -35,9 +38,14 @@ func (h *Handler) Format(c *gin.Context) {
 		c.String(http.StatusBadRequest, "Error reading body")
 		return
 	}
-	h.client.Buffer.URI
 
-	h.client.Buffer.SetContents(body)
+	folderName := "tmp-rest-folder"
+
+	_, file := util.CreateTmp(folderName, fmt.Sprintf("%s-buffer", folderName))
+	h.client.Buffer = &types.Buffer{
+		Name:     file,
+		Contents: body,
+	}
 	if err != nil {
 		c.String(http.StatusBadRequest, "Error formatting the buffer")
 		return

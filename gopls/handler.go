@@ -9,6 +9,7 @@ import (
 	"github.com/kr/pretty"
 	"github.com/nicolas-martin/cube/internal/golang_org_x_tools/lsp/protocol"
 	"github.com/nicolas-martin/govim/cmd/govim/config"
+	log "github.com/sirupsen/logrus"
 )
 
 const (
@@ -33,7 +34,7 @@ var _ protocol.Client = (*clienthandler)(nil)
 
 func (ch *clienthandler) ShowMessage(ctxt context.Context, params *protocol.ShowMessageParams) error {
 	defer absorbShutdownErr()
-	fmt.Printf("ShowMessage callback: %v", params.Message)
+	log.Printf("ShowMessage callback: %v", params.Message)
 
 	var hl string
 	switch params.Type {
@@ -56,7 +57,7 @@ func (ch *clienthandler) ShowMessage(ctxt context.Context, params *protocol.Show
 	opts["close"] = "click"
 
 	// g.ChannelCall("popup_create", strings.Split(params.Message, "\n"), opts)
-	fmt.Printf(">>> Popup create %s %v", strings.Split(params.Message, "-"), opts)
+	log.Printf(">>> Popup create %s %v", strings.Split(params.Message, "-"), opts)
 	return nil
 }
 
@@ -67,7 +68,7 @@ func (ch *clienthandler) ShowMessageRequest(context.Context, *protocol.ShowMessa
 
 func (ch *clienthandler) LogMessage(ctxt context.Context, params *protocol.LogMessageParams) error {
 	defer absorbShutdownErr()
-	fmt.Printf("LogMessage callback: %v", pretty.Sprint(params))
+	log.Printf("LogMessage callback: %v", pretty.Sprint(params))
 	return nil
 }
 
@@ -78,7 +79,7 @@ func (ch *clienthandler) Telemetry(context.Context, interface{}) error {
 
 func (ch *clienthandler) RegisterCapability(ctxt context.Context, params *protocol.RegistrationParams) error {
 	defer absorbShutdownErr()
-	fmt.Printf("RegisterCapability: %v", pretty.Sprint(params))
+	log.Printf("RegisterCapability: %v", pretty.Sprint(params))
 	return nil
 }
 
@@ -148,13 +149,13 @@ func (ch *clienthandler) Event(context.Context, *interface{}) error {
 
 func (ch *clienthandler) PublishDiagnostics(ctxt context.Context, params *protocol.PublishDiagnosticsParams) error {
 	defer absorbShutdownErr()
-	fmt.Printf("PublishDiagnostics callback: %v", pretty.Sprint(params))
+	log.Printf("PublishDiagnostics callback: %v", pretty.Sprint(params))
 	// TODO: add some temp logging for https://github.com/golang/go/issues/36601
 	// Note this only captures situations where a file's version is increasing.
 	// Because it's possible to receive new diagnostics for a file without its
 	// version increasing. And in that case it's impossible to know if the
 	// diagnostics we receive are old or not.
-	fmt.Printf("** Received non-new diagnostics for %v; ignoring. Currently have: \n\nGot: \n%v", params.URI, tabIndent(pretty.Sprint(params)))
+	log.Printf("** Received non-new diagnostics for %v; ignoring. Currently have: \n\nGot: \n%v", params.URI, tabIndent(pretty.Sprint(params)))
 	return nil
 }
 
@@ -168,7 +169,7 @@ func (ch *clienthandler) logGoplsClientf(format string, args ...interface{}) {
 	if format[len(format)-1] != '\n' {
 		format = format + "\n"
 	}
-	fmt.Printf("gopls client start =======================\n"+format+"gopls client end =======================\n", args...)
+	log.Printf("gopls client start =======================\n"+format+"gopls client end =======================\n", args...)
 }
 
 func tabIndent(s string) string {

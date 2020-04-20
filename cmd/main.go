@@ -4,13 +4,16 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/kr/pretty"
+	"github.com/nicolas-martin/cube/clog"
 	"github.com/nicolas-martin/cube/gopls"
 	"github.com/nicolas-martin/cube/internal/handler/http"
 	"github.com/nicolas-martin/cube/internal/repository"
 	"github.com/nicolas-martin/cube/internal/types"
+	"github.com/sirupsen/logrus"
 )
 
 func main() {
@@ -18,13 +21,16 @@ func main() {
 	// cmd()
 }
 func cmd() {
-	t, err := ioutil.ReadFile("tmp-wd/test.go")
+	fn := "tmp-wd/test.go"
+	t, err := ioutil.ReadFile(fn)
 	if err != nil {
 		log.Fatal(err)
 	}
+	exeFp, _ := os.Getwd()
+	path := fmt.Sprintf("%s/%s", exeFp, fn)
 
 	errChan := make(chan error, 1)
-	c := gopls.NewGoPlsClient(errChan)
+	c := gopls.NewGoPlsClient(errChan, path)
 	c.Buffer = &types.Buffer{
 		Name:     "tmp-wd/test.go",
 		Contents: t,
@@ -47,19 +53,32 @@ func cmd() {
 }
 
 func initWebAPI() {
+	l := logrus.New()
+	f, _ := os.Create("gin.log")
+	l.SetOutput(f)
+	tmpWd, _ := ioutil.TempDir("", "tmp-wd")
 	errChan := make(chan error, 1)
-	c := gopls.NewGoPlsClient(errChan)
+
+	c := gopls.NewGoPlsClient(errChan, tmpWd)
 
 	repo := repository.NewRepository()
 	wh := http.NewWebHandler(repo, c)
 
-	r := gin.Default()
+	r := gin.New()
+	gin.DisableConsoleColor()
+
+	// Logging to a file.
+	// f, _ := os.Create("gin.log")
+	gin.DefaultWriter = l.Out
+	// gin.DefaultWriter = io.MultiWriter(f)
+
+	r.Use(clog.Logger(l))
 	r.GET("/ping", wh.Ping)
 	r.POST("/format", wh.Format)
 	r.Run() // listen and serve on 0.0.0.0:8080
 
 	//NOTE: does this even do anything?
 	msg := <-errChan
-	fmt.Println(msg)
+	log.Println(msg)
 
 }

@@ -3,6 +3,7 @@ package gopls
 import (
 	"context"
 	"fmt"
+	"io/ioutil"
 	"strings"
 	"testing"
 
@@ -124,7 +125,8 @@ func abc() {
 
 func createClient() *Client {
 	errChan := make(chan error, 1)
-	c := NewGoPlsClient(errChan)
+	tmpWd, _ := ioutil.TempDir("", "tmp-wd")
+	c := NewGoPlsClient(errChan, tmpWd)
 	return c
 }
 

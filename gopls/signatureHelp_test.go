@@ -2,6 +2,7 @@
 package gopls
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -12,7 +13,6 @@ import (
 	"github.com/nicolas-martin/cube/internal/types"
 )
 
-//TODO: Make rootURI settable
 func TestClient_SignatureHelp(t *testing.T) {
 	in := `package abc
 
@@ -24,27 +24,19 @@ func abc() {
 }`
 	want := &protocol.SignatureHelp{
 		Signatures: []protocol.SignatureInformation{
-			protocol.SignatureInformation{
+			{
 				Label:         "Printf(format string, a ...interface{}) (n int, err error)",
 				Documentation: "Printf formats according to a format specifier and writes to standard output.",
 				Parameters: []protocol.ParameterInformation{
-					protocol.ParameterInformation{
-						Label: "format string", Documentation: ""},
-					protocol.ParameterInformation{
-						Label: "a ...interface{}", Documentation: ""},
+					{Label: "format string", Documentation: ""},
+					{Label: "a ...interface{}", Documentation: ""},
 				},
 			},
 		},
 		ActiveSignature: 0,
 		ActiveParameter: 0,
 	}
-	errChan := make(chan error, 1)
-	c := NewGoPlsClient(errChan)
-	dir, file := createTmp("signatureHelp_test", "signatureHelp_test-buffer")
-	err := file.Chmod(os.FileMode(777))
-	if err != nil {
-		t.Fatal(err)
-	}
+	c, dir, file := createClientWithFile("signatureHelp_test")
 	file.Write([]byte(in))
 
 	c.Buffer = &types.Buffer{
@@ -68,6 +60,18 @@ func abc() {
 	defer func() {
 		os.RemoveAll(dir)
 	}()
+}
+
+func createClientWithFile(folder string) (*Client, string, *os.File) {
+	dir, file := createTmp(folder, fmt.Sprintf("%s-buffer", folder))
+	err := file.Chmod(os.FileMode(777))
+	if err != nil {
+		log.Fatal(err)
+	}
+	errChan := make(chan error, 1)
+	c := NewGoPlsClient(errChan, dir)
+
+	return c, dir, file
 }
 
 func createTmp(folder, file string) (string, *os.File) {

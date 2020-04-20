@@ -29,7 +29,7 @@ type Client struct {
 var _ protocol.Client = &clienthandler{}
 
 // NewGoPlsClient creates a GoPls client from the local running gopls server
-func NewGoPlsClient(errChan chan error) *Client {
+func NewGoPlsClient(errChan chan error, wdPath string) *Client {
 	goplsClient := &Client{}
 	// Server
 	goplsArgs := []string{"-rpc.trace", "-logfile", "log"}
@@ -98,16 +98,19 @@ func NewGoPlsClient(errChan chan error) *Client {
 		return conn.Run(ctxt)
 	})
 
-	s := loggingGoplsServer{
-		u: server,
-	}
+	// s := loggingGoplsServer{
+	// 	u: server,
+	// }
 
-	goplsClient.Server = s
+	goplsClient.Server = server
 	params := &protocol.ParamInitialize{}
 
 	//TODO: probably shouldn't hardcode this..
-	// params.RootURI = string(span.FileURI(c.Client.app.wd))
-	params.RootURI = protocol.URIFromPath("tmp-wd")
+	params.WorkspaceFolders = []protocol.WorkspaceFolder{
+		{Name: "test", URI: string(protocol.URIFromPath(wdPath))},
+	}
+	// RootURI is deprecated
+	params.RootURI = protocol.URIFromPath(wdPath)
 
 	params.Capabilities.Workspace.Configuration = true
 	opts := source.DefaultOptions()
